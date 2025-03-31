@@ -11,27 +11,11 @@ interface ApiResponse<T> {
 }
 
 export class CustomerService {
-    // public customers: {
-    //     create: (customerData: CustomerRequestData) => Promise<any>
-    //     list: (searchData?: BaseListOptions) => Promise<any>;
-    //     update: (customer: string | CustomerResponseData, custData: Record<string, any>) => Promise<any>;
-    //     retrieve: (customerId: string) => Promise<any>;
-    //     delete: (customerId: string) => Promise<any>;
-    // };
-
     constructor(
         private bearerToken: string | null,
         private baseURL: string,
         private commonService: CommonService
-    ) {
-        // this.customers = {
-        //     create: this.createCustomer.bind(this),
-        //     list: this.listCustomer.bind(this),
-        //     update: this.updateCustomer.bind(this),
-        //     retrieve: this.retrieveCustomer.bind(this),
-        //     delete: this.deleteCustomer.bind(this),
-        // };
-    }
+    ) { }
 
     async createCustomer(customerData: CustomerRequestData): Promise<any> {
         try {
@@ -157,17 +141,13 @@ export class CustomerService {
             customerId = customerId.slice(4);
         }
         try {
-            console.log('Deleting customerId:', customerId);
             const response: ApiResponse<any> = await axios.delete(`${this.baseURL}customers/${customerId}`, {
                 headers: { Authorization: `Bearer ${this.bearerToken}` }
             });
-            console.log('Delete response:', response.data);
             return true;
         } catch (error: any) {
             if (axios.isAxiosError(error)) {
                 CommonService.manageError({ source: 'API delete customer' }, error.response || {});
-            } else {
-                console.error('Unexpected error:', error);
             }
             return false;
         }
