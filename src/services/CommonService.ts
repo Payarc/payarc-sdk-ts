@@ -2,17 +2,22 @@ import { CustomerRequestData } from "../models/customer/CustomerRequestData.mode
 import { CardData } from "../models/customer/CardData.model";
 import { BankData } from "../models/customer/BankData.model";
 import { CustomerService } from "./CustomerService";
+import { ApplicationService } from "./ApplicationService";
+import { MerchantDocument } from "../models/application/MerchantDocument.model";
 
 export class CommonService {
     public customerService: CustomerService;
+    public applicationService: ApplicationService;
     constructor(
         private bearerToken: string | null,
+        private bearerTokenAgent: string | null,
         private baseURL: string
-    ) {        
+    ) {
         this.customerService = new CustomerService(this.bearerToken, this.baseURL, this);
+        this.applicationService = new ApplicationService(this.bearerTokenAgent, this.baseURL, this);
     }
 
-    addObjectId(object: any): any {        
+    addObjectId(object: any): any {
         const handleObject = (obj: any) => {
             if (obj.id || obj.customer_id) {
                 if (obj.object === 'Charge') {
@@ -21,18 +26,18 @@ export class CommonService {
                 } else if (obj.object === 'customer') {
                     obj.object_id = `cus_${obj.customer_id}`;
                     obj.update = async (customerData: CustomerRequestData) => await this.customerService.updateCustomer(obj, customerData);
-                        if (obj.cards === undefined) {
-                            obj.cards = {}
-                        }
-                        obj.cards.create = async (cardData: CardData) => await this.customerService.addCardToCustomer(obj, cardData);
-                        if (obj.bank_accounts === undefined) {
-                            obj.bank_accounts = {}
-                        }
-                        obj.bank_accounts.create = async (bankData: BankData) => await this.customerService.addBankAccToCustomer(obj, bankData);
-                        if (obj.charges === undefined) {
-                            obj.charges = {};
-                        }
-                        //obj.charges.create = this.createCharge.bind(this, obj)
+                    if (obj.cards === undefined) {
+                        obj.cards = {}
+                    }
+                    obj.cards.create = async (cardData: CardData) => await this.customerService.addCardToCustomer(obj, cardData);
+                    if (obj.bank_accounts === undefined) {
+                        obj.bank_accounts = {}
+                    }
+                    obj.bank_accounts.create = async (bankData: BankData) => await this.customerService.addBankAccToCustomer(obj, bankData);
+                    if (obj.charges === undefined) {
+                        obj.charges = {};
+                    }
+                    //obj.charges.create = this.createCharge.bind(this, obj)
                 } else if (obj.object === 'Token') {
                     obj.object_id = `tok_${obj.id}`;
                 } else if (obj.object === 'Card') {
@@ -44,14 +49,15 @@ export class CommonService {
                     //obj.createRefund = this.refundCharge.bind(this, obj)
                 } else if (obj.object === 'ApplyApp') {
                     obj.object_id = `appl_${obj.id}`;
-                    // obj.retrieve = this.retrieveApplicant.bind(this, obj)
-                    // obj.delete = this.deleteApplicant.bind(this, obj)
-                    // obj.addDocument = this.addApplicantDocument.bind(this, obj)
-                    // obj.submit = this.submitApplicantForSignature.bind(this, obj)
-                    // obj.update = this.updateApplicant.bind(this, obj)
-                    // obj.listSubAgents = this.SubAgents.bind(this, obj)
+                    obj.retrieve = async () => await this.applicationService.retrieveApplicant(obj);
+                    obj.addDocument = async (document: MerchantDocument) => await this.applicationService.addApplicantDocument(obj, document);
+                    obj.submit = async () => await this.applicationService.submitApplicantForSignature(obj);
+                    obj.delete = async () => await this.applicationService.deleteApplicant(obj);
+                    obj.update = async (appData: Record<string, any>) => await this.applicationService.updateApplicant(obj, appData);
+                    obj.listSubAgents = async () => await this.applicationService.SubAgents();
                 } else if (obj.object === 'ApplyDocuments') {
                     obj.object_id = `doc_${obj.id}`;
+                    obj.delete = async () => await this.applicationService.deleteApplicantDocument(obj);
                     // obj.delete = this.deleteApplicantDocument.bind(this, obj)
                 } else if (obj.object === 'Campaign') {
                     obj.object_id = `cmp_${obj.id}`;
@@ -71,12 +77,12 @@ export class CommonService {
                 obj.object_id = `appl_${obj.MerchantCode}`;
                 obj.object = 'ApplyApp';
                 delete obj.MerchantCode;
-                // obj.retrieve = this.retrieveApplicant.bind(this, obj)
-                // obj.delete = this.deleteApplicant.bind(this, obj)
-                // obj.addDocument = this.addApplicantDocument.bind(this, obj)
-                // obj.submit = this.submitApplicantForSignature.bind(this, obj)
-                // obj.update = this.updateApplicant.bind(this, obj)
-                // obj.listSubAgents = this.SubAgents.bind(this, obj)
+                obj.retrieve = async () => await this.applicationService.retrieveApplicant(obj);
+                obj.addDocument = async (document: MerchantDocument) => await this.applicationService.addApplicantDocument(obj, document);
+                obj.submit = async () => await this.applicationService.submitApplicantForSignature(obj);
+                obj.delete = async () => await this.applicationService.deleteApplicant(obj);
+                obj.update = async (appData: Record<string, any>) => await this.applicationService.updateApplicant(obj, appData);
+                obj.listSubAgents = async () => await this.applicationService.SubAgents();
             } else if (obj.plan_id) { //This is plan object
                 obj.object_id = obj.plan_id
                 obj.object = 'Plan'
