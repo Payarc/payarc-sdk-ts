@@ -3,6 +3,6 @@ export interface BaseListOptions {
     limit?: number;
     search?: string;
     constraint?: Record<string, any>;
-    report_DateGTE?: string;
-    report_DateLTE?: string;
+    'report_date[gte]'?: string;
+    'report_date[lte]'?: string;
   }
