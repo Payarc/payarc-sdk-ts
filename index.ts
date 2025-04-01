@@ -1,6 +1,7 @@
 import { CustomerService } from './src/services/CustomerService'; 
 import { ApplicationService } from './src/services/ApplicationService';
 import { SplitCampaignService } from './src/services/SplitCampaignService';
+import { DisputeServices } from './src/services/DisputeService';
 import { BaseListOptions } from './src/models/BaseListOptions.model';
 import { CommonService } from './src/services/CommonService';
 import { CustomerRequestData } from './src/models/customer/CustomerRequestData.model';
@@ -10,11 +11,14 @@ import { MerchantDocument } from './src/models/application/MerchantDocument.mode
 import { ApplicationResponseData } from './src/models/application/ApplicationResponseData.model';
 import { SplitCampaignRequestData } from './src/models/splitCampaign/SplitCampaignRequestData.model';
 import { CampaignResponseData } from './src/models/splitCampaign/CampaignResponseData.model';
+import { DisputeCasesResponseData } from './src/models/dispute/DisputeCasesResponseData.model';
+import { DocumentParameters } from './src/models/dispute/DocumentParameters.model';
 
 class Payarc {
     private customerService: CustomerService;
     private applicationService: ApplicationService;
     private splitCampaignService: SplitCampaignService;
+    private disputeService: DisputeServices;
     private commonService: CommonService;
     private baseURL: string;
     private payarcConnectBaseUrl?: string;
@@ -48,6 +52,12 @@ class Payarc {
         listAccounts: (campaign: string | CampaignResponseData) => Promise<any>,
     };
 
+    public disputes: {
+        list: (searchData?: BaseListOptions) => Promise<any>,
+        retrieve: (caseId: string | DisputeCasesResponseData) => Promise<any>,
+        addDocument: (caseId: string | DisputeCasesResponseData, document: DocumentParameters) => Promise<any>,
+    };
+
     constructor(
         bearerToken: string | null,
         private baseUrl: string = 'sandbox',
@@ -75,6 +85,7 @@ class Payarc {
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
+        this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
         this.customers = {
             create: this.customerService.createCustomer.bind(this.customerService),
             list: this.customerService.listCustomer.bind(this.customerService),
@@ -98,6 +109,11 @@ class Payarc {
             retrieve: this.splitCampaignService.getDtlCampaign.bind(this.splitCampaignService),
             update: this.splitCampaignService.updateCampaign.bind(this.splitCampaignService),
             listAccounts: this.splitCampaignService.getAllAccounts.bind(this.splitCampaignService),
+        };
+        this.disputes = {
+            list: this.disputeService.listCases.bind(this.disputeService),
+            retrieve: this.disputeService.getCase.bind(this.disputeService),
+            addDocument: this.disputeService.addDocumentCase.bind(this.disputeService),
         };
     }
 }
