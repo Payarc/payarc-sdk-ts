@@ -1,5 +1,6 @@
 import { CustomerService } from './src/services/CustomerService'; 
 import { ApplicationService } from './src/services/ApplicationService';
+import { SplitCampaignService } from './src/services/SplitCampaignService';
 import { BaseListOptions } from './src/models/BaseListOptions.model';
 import { CommonService } from './src/services/CommonService';
 import { CustomerRequestData } from './src/models/customer/CustomerRequestData.model';
@@ -7,10 +8,13 @@ import { CustomerResponseData } from './src/models/customer/CustomerResponseData
 import { ApplicationInfoData } from './src/models/application/ApplicationInfoData.model';
 import { MerchantDocument } from './src/models/application/MerchantDocument.model';
 import { ApplicationResponseData } from './src/models/application/ApplicationResponseData.model';
+import { SplitCampaignRequestData } from './src/models/splitCampaign/SplitCampaignRequestData.model';
+import { CampaignResponseData } from './src/models/splitCampaign/CampaignResponseData.model';
 
 class Payarc {
     private customerService: CustomerService;
     private applicationService: ApplicationService;
+    private splitCampaignService: SplitCampaignService;
     private commonService: CommonService;
     private baseURL: string;
     private payarcConnectBaseUrl?: string;
@@ -35,6 +39,14 @@ class Payarc {
         submit: (applicant: string | ApplicationResponseData) => Promise<any>,
         deleteDocument: (documentId: string) => Promise<any>,
     }
+
+    public splitCampaigns: {
+        create: (splitCampaignData: SplitCampaignRequestData) => Promise<any>,
+        list: () => Promise<any>,
+        retrieve: (campaign: string | CampaignResponseData) => Promise<any>,
+        update: (campaign: string | CampaignResponseData, splitCampaignData: SplitCampaignRequestData) => Promise<any>,
+        listAccounts: (campaign: string | CampaignResponseData) => Promise<any>,
+    };
 
     constructor(
         bearerToken: string | null,
@@ -62,6 +74,7 @@ class Payarc {
         this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL);
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
+        this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
         this.customers = {
             create: this.customerService.createCustomer.bind(this.customerService),
             list: this.customerService.listCustomer.bind(this.customerService),
@@ -78,6 +91,13 @@ class Payarc {
             addDocument: this.applicationService.addApplicantDocument.bind(this.applicationService),
             submit: this.applicationService.submitApplicantForSignature.bind(this.applicationService),
             deleteDocument: this.applicationService.deleteApplicantDocument.bind(this.applicationService),
+        };
+        this.splitCampaigns = {
+            create: this.splitCampaignService.createCampaign.bind(this.splitCampaignService),
+            list: this.splitCampaignService.getAllCampaigns.bind(this.splitCampaignService),
+            retrieve: this.splitCampaignService.getDtlCampaign.bind(this.splitCampaignService),
+            update: this.splitCampaignService.updateCampaign.bind(this.splitCampaignService),
+            listAccounts: this.splitCampaignService.getAllAccounts.bind(this.splitCampaignService),
         };
     }
 }

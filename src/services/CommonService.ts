@@ -3,11 +3,14 @@ import { CardData } from "../models/customer/CardData.model";
 import { BankData } from "../models/customer/BankData.model";
 import { CustomerService } from "./CustomerService";
 import { ApplicationService } from "./ApplicationService";
+import { SplitCampaignService } from "./SplitCampaignService";
 import { MerchantDocument } from "../models/application/MerchantDocument.model";
+import { SplitCampaignRequestData } from "../models/splitCampaign/SplitCampaignRequestData.model";
 
 export class CommonService {
     public customerService: CustomerService;
     public applicationService: ApplicationService;
+    public splitCampaignService: SplitCampaignService;
     constructor(
         private bearerToken: string | null,
         private bearerTokenAgent: string | null,
@@ -15,6 +18,7 @@ export class CommonService {
     ) {
         this.customerService = new CustomerService(this.bearerToken, this.baseURL, this);
         this.applicationService = new ApplicationService(this.bearerTokenAgent, this.baseURL, this);
+        this.splitCampaignService = new SplitCampaignService(this.bearerTokenAgent, this.baseURL, this);
     }
 
     addObjectId(object: any): any {
@@ -61,8 +65,8 @@ export class CommonService {
                     // obj.delete = this.deleteApplicantDocument.bind(this, obj)
                 } else if (obj.object === 'Campaign') {
                     obj.object_id = `cmp_${obj.id}`;
-                    // obj.update = this.updateCampaign.bind(this, obj)
-                    // obj.retrieve = this.getDtlCampaign.bind(this, obj)
+                    obj.update = async (campaignData: SplitCampaignRequestData) => await this.splitCampaignService.updateCampaign(obj, campaignData);
+                    obj.retrieve = async () => await this.splitCampaignService.getDtlCampaign(obj);
                 } else if (obj.object === 'User') {
                     obj.object_id = `usr_${obj.id}`;
                 } else if (obj.object === 'Subscription') {
