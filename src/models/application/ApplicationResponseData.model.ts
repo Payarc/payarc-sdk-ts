@@ -1,5 +1,6 @@
 import { BaseResponse } from "../BaseResponse.model";
 import { DocumentResponseData } from "./DocumentResponseData.model";
+import { MerchantDocument } from "./MerchantDocument.model";
 export interface ApplicationResponseData extends BaseResponse {
     object: string;
     id: string;
@@ -213,6 +214,12 @@ export interface ApplicationResponseData extends BaseResponse {
     QuestionnaireSellConsumerPct: string | null;
     QuestionnaireWhenIsCustomerCharged: string | null;
     QuestionnaireWhoManagesRecurringPayments: string | null;
+    retrive?: () => Promise<BaseResponse | null>;
+    addDocument?: (document: MerchantDocument) => Promise<BaseResponse | null>;
+    submit?: () => Promise<BaseResponse | null>;
+    delete?: () => Promise<BaseResponse | null>;
+    update?: (appData: Record<string, any>) => Promise<BaseResponse | null>;
+    listSubAgents?: () => Promise<BaseResponse | null>;
 }
 
 export interface AgentTagValues {

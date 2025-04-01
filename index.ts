@@ -1,17 +1,21 @@
 import { CustomerService } from './src/services/CustomerService'; 
+import { ApplicationService } from './src/services/ApplicationService';
 import { BaseListOptions } from './src/models/BaseListOptions.model';
 import { CommonService } from './src/services/CommonService';
 import { CustomerRequestData } from './src/models/customer/CustomerRequestData.model';
 import { CustomerResponseData } from './src/models/customer/CustomerResponseData.model';
+import { ApplicationInfoData } from './src/models/application/ApplicationInfoData.model';
+import { MerchantDocument } from './src/models/application/MerchantDocument.model';
+import { ApplicationResponseData } from './src/models/application/ApplicationResponseData.model';
 
 class Payarc {
     private customerService: CustomerService;
+    private applicationService: ApplicationService;
     private commonService: CommonService;
     private baseURL: string;
     private payarcConnectBaseUrl?: string;
     private bearerToken: string | null;
     private bearerTokenAgent: string | null;
-
 
     public customers: {
         create: (customerData: CustomerRequestData) => Promise<any>,
@@ -20,6 +24,17 @@ class Payarc {
         retrieve: (customerId: string) => Promise<any>,
         delete: (customerId: string) => Promise<any>,
     };
+
+    public applications: {
+        create: (applicant: ApplicationInfoData) => Promise<any>,
+        list: (searchData?: BaseListOptions) => Promise<any>,
+        listSubAgents: (searchData?: BaseListOptions) => Promise<any>,
+        retrieve: (applicant: string | ApplicationResponseData) => Promise<any>,
+        update: (applicant: string | ApplicationResponseData, appData: Record<string, any>) => Promise<any>,
+        addDocument: (applicant: string | ApplicationResponseData, document: MerchantDocument) => Promise<any>,
+        submit: (applicant: string | ApplicationResponseData) => Promise<any>,
+        deleteDocument: (documentId: string) => Promise<any>,
+    }
 
     constructor(
         bearerToken: string | null,
@@ -44,14 +59,25 @@ class Payarc {
                 this.payarcConnectBaseUrl = 'http://testBaseUrl';
                 break;
         }
-        this.commonService = new CommonService(bearerToken, this.baseURL);
+        this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL);
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
+        this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
         this.customers = {
             create: this.customerService.createCustomer.bind(this.customerService),
             list: this.customerService.listCustomer.bind(this.customerService),
             update: this.customerService.updateCustomer.bind(this.customerService),
             retrieve: this.customerService.retrieveCustomer.bind(this.customerService),
             delete: this.customerService.deleteCustomer.bind(this.customerService),
+        };
+        this.applications = {
+            create: this.applicationService.addLead.bind(this.applicationService),
+            list: this.applicationService.applyApps.bind(this.applicationService),
+            listSubAgents: this.applicationService.SubAgents.bind(this.applicationService),
+            retrieve: this.applicationService.retrieveApplicant.bind(this.applicationService),
+            update: this.applicationService.updateApplicant.bind(this.applicationService),
+            addDocument: this.applicationService.addApplicantDocument.bind(this.applicationService),
+            submit: this.applicationService.submitApplicantForSignature.bind(this.applicationService),
+            deleteDocument: this.applicationService.deleteApplicantDocument.bind(this.applicationService),
         };
     }
 }

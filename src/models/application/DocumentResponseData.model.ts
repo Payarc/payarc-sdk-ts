@@ -7,4 +7,5 @@ export interface DocumentResponseData extends BaseResponse {
     file_order: number;
     created_at: string;
     updated_at: string;
+    delete?: () => Promise<BaseResponse | null>;
 }
