@@ -1,13 +1,16 @@
 import { CustomerRequestData } from "../models/customer/CustomerRequestData.model";
 import { CardData } from "../models/customer/CardData.model";
-import { BankData } from "../models/customer/BankData.model";
+import { ChargeService } from "./ChargeService";
 import { CustomerService } from "./CustomerService";
 import { ApplicationService } from "./ApplicationService";
 import { SplitCampaignService } from "./SplitCampaignService";
 import { MerchantDocument } from "../models/application/MerchantDocument.model";
 import { SplitCampaignRequestData } from "../models/splitCampaign/SplitCampaignRequestData.model";
+import { ChargeData } from "../models/charges/ChargeData.model";
+import { BankAccount } from "../models/customer/BankAccount.model";
 
 export class CommonService {
+    public chargeService: ChargeService;
     public customerService: CustomerService;
     public applicationService: ApplicationService;
     public splitCampaignService: SplitCampaignService;
@@ -16,6 +19,7 @@ export class CommonService {
         private bearerTokenAgent: string | null,
         private baseURL: string
     ) {
+        this.chargeService = new ChargeService(this.bearerToken, this.baseURL, this);
         this.customerService = new CustomerService(this.bearerToken, this.baseURL, this);
         this.applicationService = new ApplicationService(this.bearerTokenAgent, this.baseURL, this);
         this.splitCampaignService = new SplitCampaignService(this.bearerTokenAgent, this.baseURL, this);
@@ -26,7 +30,7 @@ export class CommonService {
             if (obj.id || obj.customer_id) {
                 if (obj.object === 'Charge') {
                     obj.object_id = `ch_${obj.id}`;
-                    //obj.createRefund = this.refundCharge.bind(this, obj)
+                    obj.createRefund = async (params: Record<string, any>) => await this.chargeService.refundCharge(obj, params);
                 } else if (obj.object === 'customer') {
                     obj.object_id = `cus_${obj.customer_id}`;
                     obj.update = async (customerData: CustomerRequestData) => await this.customerService.updateCustomer(obj, customerData);
@@ -37,11 +41,11 @@ export class CommonService {
                     if (obj.bank_accounts === undefined) {
                         obj.bank_accounts = {}
                     }
-                    obj.bank_accounts.create = async (bankData: BankData) => await this.customerService.addBankAccToCustomer(obj, bankData);
+                    obj.bank_accounts.create = async (bankData: BankAccount) => await this.customerService.addBankAccToCustomer(obj, bankData);
                     if (obj.charges === undefined) {
                         obj.charges = {};
                     }
-                    //obj.charges.create = this.createCharge.bind(this, obj)
+                    obj.charges.create = async (chargeData?: ChargeData) => await this.chargeService.createCharge(obj, chargeData);
                 } else if (obj.object === 'Token') {
                     obj.object_id = `tok_${obj.id}`;
                 } else if (obj.object === 'Card') {
@@ -50,7 +54,7 @@ export class CommonService {
                     obj.object_id = `bnk_${obj.id}`;
                 } else if (obj.object === 'ACHCharge') {
                     obj.object_id = `ach_${obj.id}`;
-                    //obj.createRefund = this.refundCharge.bind(this, obj)
+                    obj.createRefund = async (params: Record<string, any>) => await this.chargeService.refundCharge(obj, params);
                 } else if (obj.object === 'ApplyApp') {
                     obj.object_id = `appl_${obj.id}`;
                     obj.retrieve = async () => await this.applicationService.retrieveApplicant(obj);

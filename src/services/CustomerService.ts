@@ -4,7 +4,7 @@ import { CustomerRequestData } from '../models/customer/CustomerRequestData.mode
 import { CustomerResponseData } from '../models/customer/CustomerResponseData.model';
 import { BaseListOptions } from '../models/BaseListOptions.model';
 import { CardData } from '../models/customer/CardData.model';
-import { BankData } from '../models/customer/BankData.model';
+import { BankAccount } from '../models/customer/BankAccount.model';
 
 interface ApiResponse<T> {
     data: T;
@@ -117,7 +117,7 @@ export class CustomerService {
         }
     }
 
-    async addBankAccToCustomer(customer: string | CustomerResponseData, bankData: BankData) {
+    async addBankAccToCustomer(customer: string | CustomerResponseData, bankData: BankAccount) {
         try {
             let customerId = typeof customer === 'string' ? customer : customer.object_id ?? customer.id ?? '';
             if (customerId.startsWith('cus_')) {
