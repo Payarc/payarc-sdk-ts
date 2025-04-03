@@ -1,6 +1,6 @@
 
+import { BankAccount } from "./BankAccount.model";
 import { CardData } from "./CardData.model";
-import { BankData } from "./BankData.model";
 
 export interface CustomerRequestData {
     email?: string;
@@ -18,5 +18,5 @@ export interface CustomerRequestData {
     token_id?: string;
     default_card_id?: string;
     cards?: CardData[];
-    bank_accounts?: BankData[];
+    bank_accounts?: BankAccount[];
 }

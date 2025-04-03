@@ -9,4 +9,5 @@ export interface BankAccount extends BaseResponse {
     routing_number: string;
     account_number: string;
     is_default: string;
+    customer_id: string;
   }

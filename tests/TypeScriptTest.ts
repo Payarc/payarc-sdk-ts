@@ -17,8 +17,7 @@ if (!bearerToken || !baseUrl || !bearerTokenAgent || !bearerTokenWithSubagent ||
 }
 
 const payarc = new Payarc(
-  //bearerToken,
-  disputeCaseBearerToken,
+  bearerToken,
   baseUrl,
   apiVersion,
   version,
@@ -27,51 +26,144 @@ const payarc = new Payarc(
 
 async function test(): Promise<void> {
   try {
-    // payarc.splitCampaigns.getAll()
-    //   .then((res) => { console.log('Campaigns', res); })
 
-    // payarc.splitCampaigns.create({
-    //   name: 'Mega bonus',
-    //   description: "Compliment for my favorite customers",
-    //   notes: "Only for VIPs",
-    //   base_charge: 33.33,
-    //   perc_charge: '7.77',
-    //   is_default: '0',
-    //   accounts: []
+    //   payarc.customers.list({
+    //     limit: 3
     // })
-    //   .then((res) => { console.log('Campaigns created', res); })
-    //   .catch((erro) => { console.log('We have a problem ', erro); })
-
-    // payarc.splitCampaigns.retrieve('cmp_njq0vmgzy0ela96w')
-    //   .then((res) => { console.log('Campaigns details:', res); })
-    //   .catch((erro) => { console.log('We have a problem ', erro); })
-
-    // payarc.splitCampaigns.update('cmp_njq0vmgzy0ela96w', { notes: 'New version of notes' })
-    //   .then((res) => { console.log('Updated campaign details:', res); })
-    //   .catch((erro) => { console.log('We have a problem ', erro); })
-
-    // payarc.splitCampaigns.retrieve('cmp_njq0vmgzy0ela96w')
-    // .then((campaign)=>{
-    //     campaign.update({notes:'Internal modifications'}).then((res:any)=>{console.log('I am updated note', res);})
+    // .then((response) => {
+    //     const { customers = [] } = response;
+    //     console.log('Customers:', customers);
+    //     console.log('Last customer:', customers[0]);
+    //     console.log(customers[0].card.data);
+    //     console.log(customers[0].bank_account.data);
     // })
-    // .catch((erro)=>{console.log('We have a problem ', erro);})
+    // .catch(error => console.error(error));
 
-    // payarc.disputes.list()
-    // .then((result) => { console.log("Your disputes are:", result) })
-    // .catch((erro) => { console.log('We have a problem ', erro) })
+    // payarc.customers.retrieve('cus_PxMADVnApDnxV4nN')
+    // .then((customer) => {
+    //    customer.bank_accounts.create({
+    //         account_number:'123432876',
+    //         routing_number:'021000021',
+    //         first_name: 'Test2',
+    //         last_name:'Account',
+    //         account_type: 'Personal Checking',
+    //         sec_code: 'WEB'
+    //     }).then((res:any)=>{
+    //         console.log('result from bank account is ', res);
+    //     })
+    // })
+    // .catch(error => console.error(error));
 
-    payarc.disputes.retrieve('dis_V0B9ARbWRMB1AMRw')
-      .then((result) => { console.log("Your dispute is:", result);
-        console.log("Your file is:", result.data.evidence);
-       })
-      .catch((erro) => { console.log('We have a problem ', erro) })
+    // payarc.customers.retrieve('cus_PxMADVnApDnxV4nN')
+    // .then((customer) => {
+    //    console.log('customer is ', customer);
+    // })
+    // .catch(error => console.error(error));
 
+    //   payarc.charges.create({
+    //     amount:1299,
+    //     currency: 'usd',
+    //     source: {
+    //         //card_id: 'card_mMPL0211yyym0vyN',
+    //         customer_id: 'cus_PxMADVnApDnxV4nN',
+    //     }
+    // })
+    // .then(charge => console.log('Success the charge is ',charge))
+    // .catch(error => console.error('Error detected:',error))
 
-    // const DocumentDataBase64 = "iVBORw0KGgoAAAANSUhEUgAAAIUAAABsCAYAAABEkXF2AAAABHNCSVQICAgIfAhkiAAAAupJREFUeJzt3cFuEkEcx/E/001qUQ+E4NF48GB4BRM9+i59AE16ANlE4wv4Mp5MjI8gZ+ONEMJBAzaWwZsVf2VnstPZpfb7STh06ewu5JuFnSzQ8d5vDfiLa3sHcHiIAoIoIIgCgiggitwbWM/f2vniTe7NoIZ7Dz9Y0X0qy7NHYfbLtn6dfzOoYXPlUl4+IIgCooGXj10ngzM77p81vVmY2Y9vL+xi9Tn4f41HYVZYx3Wb3yws9oWBlw8IooAgCgiigCAKCKKAIAoIooAgCoikGU3nqpvy3qesPvv6+/2+LZfLpHUcsrrPD0cKCKKAIAoIooAgCgiigCAKCOecs7q3iJXbZDLZWVaWZfR4733lLbfZbBbchzZvvV4vy+PmSAFBFBBEAUEUEEQBQRQQRAFR5DzfD81FxMxVpMg9l3HT938fjhQQRAFBFBBEAUEUEEQBQRQQRe5z7SptnYejGkcKCKKAIAoIooAgCgiigCAKiKQoYj6bMB6Pd8aMRqPoz22kfCalzfmXm45nDoIoIIgCgiggiAKCKCCIAiJrFKnfTxHS9vdX5P7+ibZwpIAgCgiigCAKCKKAIAoIooDomNl2352hc+WY3+NYzyf2c345V3EyGNmdwevo8anbr3Lbfu/j+9fndrH69Ofv+48+WtF9JuM4UkAQBQRRQBAFBFFAEAUEUUBUfo9m6jUPzjl7eWr26vRyWVmW9u59GT2+Suo1B4vFImn8/4ojBQRRQBAFBFFAEAUEUUAQBUTHe7/3eorUeYrQ9RSprmP/UtZ/6OP/xfUUqI0oIIgCgiggiqY36Ddz25x/uZZ1PXmcNj60H6H1H/p4sV1F/VvjZx84HJx9IFrl733wexy3U/b3FO7ogR0dD7OsezqdVt4/HFZvNzQ+t9T9C40P6ty9erElfEKsbblnDHNrekYzFu8pIIgCgiggiAKCKCAqzz5Ccr+7T3133fb1DG0//ro4UkAQBQRRQBAFBFFAEAXEb3wL3JblytFeAAAAAElFTkSuQmCC"
+    //   payarc.charges.create({
+    //     amount:1391,
+    //     currency: 'usd',
+    //     source: {
+    //         customer_id: 'cus_PxMADVnApDnxV4nN',
+    //     }
+    // })
+    // .then(charge => console.log('Success! The charge is:', charge))
+    // .catch(error => console.error('Error detected:', error));
 
-    // payarc.disputes.addDocument('dis_V0B9ARbWRMB1AMRw', { DocumentDataBase64: DocumentDataBase64, text: 'It is the true true' })
-    //   .then((result) => { console.log("Your result is:", result) })
-    //   .catch((erro) => { console.log('We have a problem ', erro) })
+    // payarc.customers.retrieve('cus_PxMADVnApDnxV4nN')
+    //   .then((customer) => {
+    //     customer.charges.create(
+    //       {
+    //         amount: 699,
+    //         sec_code: 'WEB',
+    //         source: {
+    //           bank_account_id: 'bnk_L5Ja4dkad6aK63jD'
+    //         }
+    //       }
+    //     ).then((ex:any) => { console.log('Charge by Bank account ID:', ex) })
+    //   })
+
+    //       payarc.customers.retrieve('cus_PxMADVnApDnxV4nN')
+    // .then((customer) => {
+    //     customer.charges.create(
+    //     {
+    //         amount:7788,
+    //         sec_code: 'WEB',
+    //         source: {
+    //             account_number:'123432575352',
+    //             routing_number:'123345349',
+    //             first_name: 'FirstName III',
+    //             last_name:'LastName III',
+    //             account_type: 'Personal Savings',
+    //         }
+    //     }
+    //    ).then((ex: any)=>{console.log('Charge by Bank account ID:', ex)})
+    // })
+
+  //   payarc.charges.create({
+  //     amount: 655, // Amount in cents
+  //     currency: 'usd', // Currency code (e.g., 'usd')
+  // source:{
+  //     card_number: '4012000098765439', // Payment source (e.g., credit card number)
+  //     exp_month: '03',  //Credit card attributes 
+  //     exp_year: '2025', //Credit card attributes 
+  //     }
+  // })
+  //     .then(charge => console.log('Success the charge is ',charge))
+  //     .catch(error => console.error('Error detected:',error));
+
+    // payarc.charges.list({})
+    //   .then(charges => console.log(charges))
+    //   .catch(error => console.error(error));
+
+      // payarc.charges.retrieve('ch_DoBnOnyRBWnWXOyW')
+      // .then(charge => console.log('Success! The charge is:', charge))
+      // .catch(error => console.error('Error detected:', error));
+
+      // payarc.charges.retrieve('ach_deD08AGADDDGEg9a')
+      // .then(charge => console.log('Success the charge is ',charge))
+      // .catch(error => console.error('Error detected:',error))
+
+      // payarc.charges.retrieve('ach_deD08AGADDDGEg9a')
+      // .then((charge) => {
+      //     charge.createRefund({
+      //         reason: 'requested_by_customer',
+      //         description: 'The customer returned the product'
+      //     }).then((obj:any) => {
+      //         console.log("Refund successful:", obj);
+      //     }).catch((error:any) => console.error('Error detected:', error));
+      // })
+      // .catch(error => console.error('Error detected:', error));
+
+    //   payarc.charges.createRefund('ch_BoLWODRbBBnMBOXy', {
+    //     reason: 'requested_by_customer',
+    //     description: 'The customer returned the product'
+    // }).then((obj) => {
+    //     console.log("Refund successful:", obj);
+    // }).catch(error => console.error('Error detected:', error));
+
+    // payarc.charges.retrieve('ach_dAe7gEGe7eEG9aD0')
+    //   .then(charge => {
+    //     charge.createRefund({}).then((obj: any) => {
+    //       console.log("Refund successful:", obj);
+    //     }).catch((error: any) => console.error('Error detected:', error));
+    //   })
+    //   .catch(error => console.error('Error detected:', error))
+
+    // payarc.charges.createRefund('ach_dAe7gEGe7eEG9aD0', {})
+    //   .then(ch => console.log('Refunded with', ch))
+    //   .catch(error => console.error('Error detected:', error))
 
     //JSON.stringify(result, null, '\t')
   } catch (error) {

@@ -3,7 +3,6 @@ import { Card } from "../charges/Card.model";
 import { BankAccount } from "./BankAccount.model";
 import { ListBaseResponse } from "../ListBaseResponse.model";
 import { CustomerRequestData } from "./CustomerRequestData.model";
-import { BankData } from "./BankData.model";
 import { CardData } from "./CardData.model";
 
 export interface CustomerResponseData extends BaseResponse {
@@ -56,5 +55,5 @@ interface CardsContainer {
 
 interface BankAccountsContainer {
     bank_accounts?: ListBaseResponse;
-    create?: (data?: BankData) => Promise<BaseResponse | null>;
+    create?: (data?: BankAccount) => Promise<BaseResponse | null>;
 }

@@ -1,3 +1,4 @@
+import { ChargeService } from './src/services/ChargeService';
 import { CustomerService } from './src/services/CustomerService'; 
 import { ApplicationService } from './src/services/ApplicationService';
 import { SplitCampaignService } from './src/services/SplitCampaignService';
@@ -15,6 +16,7 @@ import { DisputeCasesResponseData } from './src/models/dispute/DisputeCasesRespo
 import { DocumentParameters } from './src/models/dispute/DocumentParameters.model';
 
 class Payarc {
+    private chargeService: ChargeService;
     private customerService: CustomerService;
     private applicationService: ApplicationService;
     private splitCampaignService: SplitCampaignService;
@@ -24,6 +26,13 @@ class Payarc {
     private payarcConnectBaseUrl?: string;
     private bearerToken: string | null;
     private bearerTokenAgent: string | null;
+
+    public charges: {
+        create: (obj: any, chargeData?: any) => Promise<any>,
+        retrieve: (chargeId: string | any) => Promise<any>,
+        list: (searchData?: BaseListOptions) => Promise<any>,
+        createRefund: (chargeId: string | any, refundData?: any) => Promise<any>,
+    };
 
     public customers: {
         create: (customerData: CustomerRequestData) => Promise<any>,
@@ -82,10 +91,17 @@ class Payarc {
                 break;
         }
         this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL);
+        this.chargeService = new ChargeService(bearerToken, this.baseURL, this.commonService);
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
+        this.charges = {
+            create: this.chargeService.createCharge.bind(this.chargeService),
+            retrieve: this.chargeService.getCharge.bind(this.chargeService),
+            list: this.chargeService.listCharge.bind(this.chargeService),
+            createRefund: this.chargeService.refundCharge.bind(this.chargeService),
+        };
         this.customers = {
             create: this.customerService.createCustomer.bind(this.customerService),
             list: this.customerService.listCustomer.bind(this.customerService),
