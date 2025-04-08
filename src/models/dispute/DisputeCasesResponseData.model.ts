@@ -6,18 +6,18 @@ export interface DisputeCasesResponseData extends BaseResponse {
     full_reason_code: string;
     item_type: string;
     merchant_number: string;
-    resolution_to: string | null;
+    resolution_to?: string;
     debit_credit: string;
     trans_code: string;
     reason_code: string;
     bin_ica: string;
     record_type: string;
     card_brand: string;
-    date_resolved: string | null;
+    date_resolved?: string;
     acquirer_reference_number: string;
-    original_reference_number: string | null;
+    original_reference_number?: string;
     foreign_domestic: string;
-    mcc: string | null;
+    mcc?: string;
     auth_code: string;
     date_posted: string;
     date_loaded: string;
@@ -48,7 +48,7 @@ export interface DisputeCasesResponseData extends BaseResponse {
     bank_number: number;
     case_submitted: boolean;
     tsys_fiserv_indicator: string;
-    latest_secondary_case_id: number | null;
+    latest_secondary_case_id?: number;
     rdr_indicator: number;
     report_date: string;
     case_number: string;
@@ -61,9 +61,9 @@ export interface DisputeCasesResponseData extends BaseResponse {
     card_type: string;
     card_number: string;
     response: string;
-    last_updated_date: string | null;
-    responded_date: string | null;
-    file: ListBaseResponse | null;
-    evidence: ListBaseResponse | null;
-    case_submission: ListBaseResponse | null;
+    last_updated_date?: string;
+    responded_date?: string;
+    file?: ListBaseResponse;
+    evidence?: ListBaseResponse;
+    case_submission?: ListBaseResponse;
 }
