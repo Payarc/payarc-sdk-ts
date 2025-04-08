@@ -4,9 +4,10 @@ import { ChargeService } from "./ChargeService";
 import { CustomerService } from "./CustomerService";
 import { ApplicationService } from "./ApplicationService";
 import { SplitCampaignService } from "./SplitCampaignService";
+import { PlanService } from "./PlanService";
 import { MerchantDocument } from "../models/application/MerchantDocument.model";
 import { SplitCampaignRequestData } from "../models/splitCampaign/SplitCampaignRequestData.model";
-import { ChargeData } from "../models/charges/ChargeData.model";
+import { ChargeData } from "../models/charge/ChargeData.model";
 import { BankAccount } from "../models/customer/BankAccount.model";
 
 export class CommonService {
@@ -14,6 +15,7 @@ export class CommonService {
     public customerService: CustomerService;
     public applicationService: ApplicationService;
     public splitCampaignService: SplitCampaignService;
+    public planService: PlanService;
     constructor(
         private bearerToken: string | null,
         private bearerTokenAgent: string | null,
@@ -23,6 +25,7 @@ export class CommonService {
         this.customerService = new CustomerService(this.bearerToken, this.baseURL, this);
         this.applicationService = new ApplicationService(this.bearerTokenAgent, this.baseURL, this);
         this.splitCampaignService = new SplitCampaignService(this.bearerTokenAgent, this.baseURL, this);
+        this.planService = new PlanService(this.bearerToken, this.baseURL, this);
     }
 
     addObjectId(object: any): any {
@@ -96,10 +99,10 @@ export class CommonService {
                 obj.object = 'Plan'
                 delete obj.plan_id
                 //add functions
-                // obj.retrieve = this.getPlan.bind(this, obj)
-                // obj.update = this.updatePlan.bind(this, obj)
-                // obj.delete = this.deletePlan.bind(this, obj)
-                // obj.createSubscription = this.createSubscription.bind(this, obj)
+                obj.retrieve = async () => await this.planService.getPlan(obj);
+                obj.update = async (planData: Record<string, any>) => await this.planService.updatePlan(obj, planData);
+                obj.delete = async () => await this.planService.deletePlan(obj);
+                obj.createSubscription = async (subscriptionData: Record<string, any>) => await this.planService.createSubscription(obj, subscriptionData);
             }
 
             for (const key in obj) {

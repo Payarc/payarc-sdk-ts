@@ -165,6 +165,69 @@ async function test(): Promise<void> {
     //   .then(ch => console.log('Refunded with', ch))
     //   .catch(error => console.error('Error detected:', error))
 
+    // const Plan = {
+    //   name: 'Monthly billing regular',
+    //   amount: 999,
+    //   interval: 'month',
+    //   statement_descriptor: '2024 MerchantT. Rglr srvc'
+    // }
+    // payarc.billing.plan.create(Plan)
+    //   .then((result) => { console.log('Created plan is:', result); })
+    //   .catch((erro) => { console.log('We have a problem ', erro); })
+
+    // payarc.billing.plan.list()
+    // .then((result) => {
+    //     console.log('List of plans:', result);
+    // })
+    // .catch((erro) => { console.log('We have a problem ', erro); })
+
+    // const updDetails = { name:'Monthly Regular BBilling'}
+    // payarc.billing.plan.update('plan_52b69e71', updDetails)
+    //     .then((result) => { console.log("Plan is updated:", result) })
+    //     .catch((erro) => { console.log('We have a problem ', erro) })
+
+    // payarc.customers.list({ limit: 3 })
+    //   .then((response) => {
+    //     console.log('Customers:', response);
+    //   })
+    //   .catch(error => console.error(error));
+
+    // payarc.billing.plan.list()
+    //   .then((result) => {
+    //     console.log('List of plans:', result);
+    //     // if (result.length) {
+    //     //   const sub = {
+    //     //     customer_id: 'cus_PxMADVnApDnxV4nN'
+    //     //   }
+    //     //   result[0].createSubscription(sub)
+    //     //     .then((subs:any) => { console.log("New subscription:", subs) })
+    //     //     .catch((erro: any) => { console.log('We have a problem ', erro) })
+    //     // }
+    //   })
+    //   .catch((erro) => { console.log('We have a problem ', erro); })
+
+
+    //   payarc.billing.plan.createSubscription('plan_eb03ef6e',{customer_id:'cus_ADjpPVPKPnDNVnxK'})
+    // .then((subs) => { console.log("New subscription:", subs) })
+    // .catch((erro) => { console.log('We have a problem ', erro) })
+
+    
+    // payarc.billing.plan.subscription.list({limit:2, plan:'plan_eb03ef6e'})
+    // .then((result) => { 
+    //     console.log("Plan for first subscription ", result[0].plan)
+    //     console.log("Available subscriptions ", result)
+    //     result.map((sub:any)=>{console.log(sub.plan);})
+    //  })
+    // .catch((erro) => { console.log('We have a problem ', erro) })
+
+    // payarc.billing.plan.subscription.cancel('sub_R0lVAjR000PjgPrx')
+    // .then((subs) => { console.log("Cancelled subscription:", subs) })
+    // .catch((erro) => { console.log('We have a problem ', erro) })
+
+
+    payarc.billing.plan.subscription.update('sub_R0lVAjR000PjgPrx',{description:'Monthly for VIP clients'})
+    .then((subs) => { console.log("Updated subscription:", subs) })
+    .catch((erro) => { console.log('We have a problem ', erro) })
     //JSON.stringify(result, null, '\t')
   } catch (error) {
     console.error('Error fetching customers:', error);
