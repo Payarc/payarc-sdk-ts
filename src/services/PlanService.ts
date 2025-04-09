@@ -23,7 +23,7 @@ export class PlanService {
 
         try {
             const response: ApiResponse<any> = await axios.post(`${this.baseURL}plans`, data, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -35,7 +35,7 @@ export class PlanService {
         const dataId = typeof params === 'string' ? params : params.object_id || params;
         try {
             const response: ApiResponse<any> = await axios.get(`${this.baseURL}plans/${dataId}`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data || {});
         } catch (error: any) {
@@ -47,7 +47,7 @@ export class PlanService {
         params.limit = params.limit || 99999;
         try {
             const response: ApiResponse<any> = await axios.get(`${this.baseURL}plans`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
                 params: { ...params },
             });
             return this.commonService.addObjectId(response.data.data || {});
@@ -60,7 +60,7 @@ export class PlanService {
         const dataId = typeof params === 'string' ? params : params.object_id || params;
         try {
             const response: ApiResponse<any> = await axios.patch(`${this.baseURL}plans/${dataId}`, newData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -72,7 +72,7 @@ export class PlanService {
         const dataId = typeof params === 'string' ? params : params.object_id || params;
         try {
             const response: ApiResponse<any> = await axios.delete(`${this.baseURL}plans/${dataId}`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
         } catch (error: any) {
             CommonService.manageError({ source: 'API Delete Plan' }, error.response || {});
@@ -83,8 +83,8 @@ export class PlanService {
         params.limit = params.limit || 99999;
         try {
             const response: ApiResponse<any> = await axios.get(`${this.baseURL}subscriptions`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
-                params: { ...params },
+                headers: this.commonService.requestHeaders(this.bearerToken),
+                params: { ...params }
             });
             return this.commonService.addObjectId(response.data.data || {});
         } catch (error: any) {
@@ -99,7 +99,7 @@ export class PlanService {
 
         try {
             const response = await axios.post(`${this.baseURL}subscriptions`, newData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -112,7 +112,7 @@ export class PlanService {
         dataId = dataId.startsWith('sub_') ? dataId.slice(4) : dataId;
         try {
             const response: ApiResponse<any> = await axios.patch(`${this.baseURL}subscriptions/${dataId}/cancel`, {}, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -125,7 +125,7 @@ export class PlanService {
         dataId = dataId.startsWith('sub_') ? dataId.slice(4) : dataId;
         try {
             const response: ApiResponse<any> = await axios.patch(`${this.baseURL}subscriptions/${dataId}`, newData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
