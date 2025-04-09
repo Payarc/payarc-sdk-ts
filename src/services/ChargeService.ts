@@ -1,9 +1,9 @@
 import axios from "axios";
 import { CommonService } from './CommonService';
-import { ChargeData } from "../models/charges/ChargeData.model";
-import { ChargeResponseData } from "../models/charges/ChargeResponseData.model";
+import { ChargeData } from "../models/charge/ChargeData.model";
+import { ChargeResponseData } from "../models/charge/ChargeResponseData.model";
 import { BaseListOptions } from "../models/BaseListOptions.model";
-import { AchChargeResponseData } from "../models/charges/AchChargeResponseData.model";
+import { AchChargeResponseData } from "../models/charge/AchChargeResponseData.model";
 
 interface ApiResponse<T> {
     data: T;

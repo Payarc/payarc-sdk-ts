@@ -3,8 +3,9 @@ import { CustomerService } from './src/services/CustomerService';
 import { ApplicationService } from './src/services/ApplicationService';
 import { SplitCampaignService } from './src/services/SplitCampaignService';
 import { DisputeServices } from './src/services/DisputeService';
-import { BaseListOptions } from './src/models/BaseListOptions.model';
+import { PlanService } from './src/services/PlanService';
 import { CommonService } from './src/services/CommonService';
+import { BaseListOptions } from './src/models/BaseListOptions.model';
 import { CustomerRequestData } from './src/models/customer/CustomerRequestData.model';
 import { CustomerResponseData } from './src/models/customer/CustomerResponseData.model';
 import { ApplicationInfoData } from './src/models/application/ApplicationInfoData.model';
@@ -14,6 +15,8 @@ import { SplitCampaignRequestData } from './src/models/splitCampaign/SplitCampai
 import { CampaignResponseData } from './src/models/splitCampaign/CampaignResponseData.model';
 import { DisputeCasesResponseData } from './src/models/dispute/DisputeCasesResponseData.model';
 import { DocumentParameters } from './src/models/dispute/DocumentParameters.model';
+import { SubscriptionData } from './src/models/plan/SubscriptionData.model';
+import { SubscriptionListOptions } from './src/models/plan/SubscriptionListOptions.model';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -21,6 +24,7 @@ class Payarc {
     private applicationService: ApplicationService;
     private splitCampaignService: SplitCampaignService;
     private disputeService: DisputeServices;
+    private planService: PlanService;
     private commonService: CommonService;
     private baseURL: string;
     private payarcConnectBaseUrl?: string;
@@ -67,6 +71,22 @@ class Payarc {
         addDocument: (caseId: string | DisputeCasesResponseData, document: DocumentParameters) => Promise<any>,
     };
 
+    public billing: {
+        plan: {
+            create: (planData: any) => Promise<any>,
+            list: (searchData?: BaseListOptions) => Promise<any>,
+            retrieve: (planId: string) => Promise<any>,
+            update: (planId: string, planData: any) => Promise<any>,
+            delete: (planId: string) => Promise<any>,
+            createSubscription: (planId: string, subscriptionData: SubscriptionData) => Promise<any>,
+            subscription: {
+                list: (searchData?: SubscriptionListOptions) => Promise<any>,
+                cancel: (subscriptionId: string) => Promise<any>,
+                update: (subscriptionId: string, subscriptionData: any) => Promise<any>,
+            }
+        }
+    }
+
     constructor(
         bearerToken: string | null,
         private baseUrl: string = 'sandbox',
@@ -96,6 +116,7 @@ class Payarc {
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
+        this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
         this.charges = {
             create: this.chargeService.createCharge.bind(this.chargeService),
             retrieve: this.chargeService.getCharge.bind(this.chargeService),
@@ -131,6 +152,21 @@ class Payarc {
             retrieve: this.disputeService.getCase.bind(this.disputeService),
             addDocument: this.disputeService.addDocumentCase.bind(this.disputeService),
         };
+        this.billing = {
+            plan:{
+                create: this.planService.createPlan.bind(this.planService),
+                list: this.planService.listPlan.bind(this.planService),
+                retrieve: this.planService.getPlan.bind(this.planService),
+                update: this.planService.updatePlan.bind(this.planService),
+                delete: this.planService.deletePlan.bind(this.planService),
+                createSubscription: this.planService.createSubscription.bind(this.planService),
+                subscription: {
+                    list: this.planService.getAllSubscriptions.bind(this.planService),
+                    cancel: this.planService.cancelSubscription.bind(this.planService),
+                    update: this.planService.updateSubscription.bind(this.planService),
+                }
+            }
+        }
     }
 }
 

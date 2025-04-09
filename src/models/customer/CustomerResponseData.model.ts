@@ -1,5 +1,5 @@
 import { BaseResponse } from "../BaseResponse.model";
-import { Card } from "../charges/Card.model";
+import { Card } from "../charge/Card.model";
 import { BankAccount } from "./BankAccount.model";
 import { ListBaseResponse } from "../ListBaseResponse.model";
 import { CustomerRequestData } from "./CustomerRequestData.model";

@@ -1,9 +1,9 @@
 export interface SplitCampaignRequestData {
-    name?: string | null;
-    base_charge?: number | null;
-    perc_charge?: string | null;
-    description?: string | null;
-    notes?: string | null;
-    is_default?: string | null;
-    accounts?: string[] | null;
+    name?: string;
+    base_charge?: number;
+    perc_charge?: string;
+    description?: string;
+    notes?: string;
+    is_default?: string;
+    accounts?: string[];
 }
