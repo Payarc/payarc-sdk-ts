@@ -65,7 +65,7 @@ class Payarc {
         list: () => Promise<any>,
         retrieve: (campaign: string | CampaignResponseData) => Promise<any>,
         update: (campaign: string | CampaignResponseData, splitCampaignData: SplitCampaignRequestData) => Promise<any>,
-        listAccounts: (campaign: string | CampaignResponseData) => Promise<any>,
+        listAccounts: () => Promise<any>,
     };
 
     public disputes: {
@@ -91,7 +91,7 @@ class Payarc {
     }
 
     public payarcConnect: {
-        login: (bearerToken: string, deviceSerialNo: string) => Promise<any>,
+        login: () => Promise<any>,
         sale: (tenderType: string, ecrRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
         void: (payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
         refund: (amount: number, payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
