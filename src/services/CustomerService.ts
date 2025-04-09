@@ -20,7 +20,7 @@ export class CustomerService {
     async createCustomer(customerData: CustomerRequestData): Promise<any> {
         try {
             const response: ApiResponse<any> = await axios.post(`${this.baseURL}customers`, customerData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             const customer = this.commonService.addObjectId(response.data.data);
             if (customerData.cards && customerData.cards.length > 0) {
@@ -47,7 +47,7 @@ export class CustomerService {
         }
         try {
             const response: ApiResponse<any> = await axios.get(`${this.baseURL}customers/${customerId}`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -57,9 +57,9 @@ export class CustomerService {
 
     async listCustomer(searchData: BaseListOptions = {}): Promise<any> {
         const { limit = 25, page = 1, constraint = {} } = searchData;
-        try {            
+        try {
             const response: ApiResponse<any> = await axios.get(`${this.baseURL}customers`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
                 params: { limit, page, ...constraint }
             });
             return {
@@ -78,7 +78,7 @@ export class CustomerService {
         }
         try {
             const response: ApiResponse<any> = await axios.patch(`${this.baseURL}customers/${customerId}`, customerData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error) {
@@ -89,7 +89,7 @@ export class CustomerService {
     async genTokenForCard(tokenData = {}) {
         try {
             const response = await axios.post(`${this.baseURL}tokens`, tokenData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return response.data.data;
         } catch (error: unknown) {
@@ -125,7 +125,7 @@ export class CustomerService {
             }
             bankData.customer_id = customerId;
             const response = await axios.post(`${this.baseURL}bankaccounts`, bankData, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: unknown) {
@@ -142,7 +142,7 @@ export class CustomerService {
         }
         try {
             const response: ApiResponse<any> = await axios.delete(`${this.baseURL}customers/${customerId}`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return true;
         } catch (error: any) {

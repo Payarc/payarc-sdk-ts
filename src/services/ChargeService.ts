@@ -57,7 +57,7 @@ export class ChargeService {
                         const resp = await axios.post<ApiResponse<any>>(
                             `${this.baseURL}achcharges`,
                             chargeData,
-                            { headers: { Authorization: `Bearer ${this.bearerToken}` } }
+                            { headers: this.commonService.requestHeaders(this.bearerToken) }
                         );
 
                         return this.commonService.addObjectId(resp.data.data);
@@ -82,7 +82,7 @@ export class ChargeService {
             const response = await axios.post<ApiResponse<any>>(
                 `${this.baseURL}charges`,
                 chargeData,
-                { headers: { Authorization: `Bearer ${this.bearerToken}` }, maxRedirects: 0 }
+                { headers: this.commonService.requestHeaders(this.bearerToken), maxRedirects: 0 }
             );
 
             return this.commonService.addObjectId(response.data.data);
@@ -111,7 +111,7 @@ export class ChargeService {
             }
 
             const response = await axios.get<ApiResponse<any>>(endpoint, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
                 params: includeParams,
             });
 
@@ -125,7 +125,7 @@ export class ChargeService {
         const { limit = 25, page = 1, search = {} } = searchData;
         try {
             const response = await axios.get<ApiResponse<ChargeResponseData[]>>(`${this.baseURL}charges`, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
                 params: { limit, page, ...search },
             });
 
@@ -162,7 +162,7 @@ export class ChargeService {
 
         try {
             const response = await axios.post(`${this.baseURL}charges/${chargeId}/refunds`, params, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
             });
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -187,7 +187,7 @@ export class ChargeService {
 
         try {
             const response = await axios.post(`${this.baseURL}achcharges`, params, {
-                headers: { Authorization: `Bearer ${this.bearerToken}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
             });
 
             return this.commonService.addObjectId(response.data.data);

@@ -36,7 +36,7 @@ export class DisputeServices {
             const response: AxiosResponse<ApiResponse<any>> = await axios.get(
                 `${this.baseURL}cases`,
                 {
-                    headers: { Authorization: `Bearer ${this.bearerToken}` },
+                    headers: this.commonService.requestHeaders(this.bearerToken),
                     params: { ...params }
                 }
             );
@@ -56,7 +56,7 @@ export class DisputeServices {
             const response: ApiResponse<any> = await axios.get(
                 `${this.baseURL}cases/${disputeId}`,
                 {
-                    headers: { Authorization: `Bearer ${this.bearerToken}` }
+                    headers: this.commonService.requestHeaders(this.bearerToken)
                 }
             );
             return this.commonService.addObjectId(response.data?.primary_case || {});
@@ -100,12 +100,13 @@ export class DisputeServices {
                 };
             }
 
+            const requestHeaders = this.commonService.requestHeaders(this.bearerToken);
+            const baseHeaders = { ...requestHeaders, ...headers };
+
             const response: AxiosResponse<ApiResponse<any>> = await axios.post(
                 `${this.baseURL}cases/${disputeId}/evidence`,
                 formDataBuffer,
-                {
-                    headers: { Authorization: `Bearer ${this.bearerToken}`, ...headers }
-                }
+                { headers: baseHeaders }
             );
 
             await axios.post(
@@ -114,7 +115,7 @@ export class DisputeServices {
                     message: params.message || 'Case number#: xxxxxxxx, submitted by SDK'
                 },
                 {
-                    headers: { Authorization: `Bearer ${this.bearerToken}` }
+                    headers: this.commonService.requestHeaders(this.bearerToken)
                 }
             );
 

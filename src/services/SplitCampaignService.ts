@@ -19,7 +19,7 @@ export class SplitCampaignService {
             const response: AxiosResponse<ApiResponse<any>> = await axios.post(
                 `${this.baseURL}agent-hub/campaigns`, 
                 splitCampaignData, 
-                { headers: { Authorization: `Bearer ${this.bearerTokenAgent}` } }
+                { headers: this.commonService.requestHeaders(this.bearerToken) }
             );
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -32,7 +32,7 @@ export class SplitCampaignService {
             const response: AxiosResponse<ApiResponse<any>> = await axios.get(
                 `${this.baseURL}agent-hub/campaigns`, 
                 { 
-                    headers: { Authorization: `Bearer ${this.bearerTokenAgent}` }, 
+                    headers: this.commonService.requestHeaders(this.bearerToken),
                     params: { limit: 0 } 
                 }
             );
@@ -51,7 +51,7 @@ export class SplitCampaignService {
             const response: AxiosResponse<ApiResponse<any>> = await axios.get(
                 `${this.baseURL}agent-hub/campaigns/${customerId}`, 
                 { 
-                    headers: { Authorization: `Bearer ${this.bearerTokenAgent}` }, 
+                    headers: this.commonService.requestHeaders(this.bearerToken),
                     params: { limit: 0 } 
                 }
             );
@@ -70,7 +70,7 @@ export class SplitCampaignService {
             const response: AxiosResponse<ApiResponse<any>> = await axios.patch(
                 `${this.baseURL}agent-hub/campaigns/${customerId}`, 
                 newData, 
-                { headers: { Authorization: `Bearer ${this.bearerTokenAgent}` } }
+                { headers: this.commonService.requestHeaders(this.bearerToken) }
             );
             return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
@@ -82,7 +82,7 @@ export class SplitCampaignService {
         try {
             const response: AxiosResponse<ApiResponse<any>> = await axios.get(
                 `${this.baseURL}account/my-accounts`, 
-                { headers: { Authorization: `Bearer ${this.bearerTokenAgent}` } }
+                { headers: this.commonService.requestHeaders(this.bearerToken) }
             );
             return this.commonService.addObjectId(response.data || {});
         } catch (error: any) {

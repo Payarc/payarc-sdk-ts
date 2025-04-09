@@ -17,7 +17,8 @@ export class CommonService {
     constructor(
         private bearerToken: string | null,
         private bearerTokenAgent: string | null,
-        private baseURL: string
+        private baseURL: string,
+        private version: string,
     ) {
         this.chargeService = new ChargeService(this.bearerToken, this.baseURL, this);
         this.customerService = new CustomerService(this.bearerToken, this.baseURL, this);
@@ -134,5 +135,12 @@ export class CommonService {
             errorException: error.data?.exception || 'Unknown',
             errorDataMessage: error.data?.message || 'Unknown',
         };
+    }
+
+    requestHeaders(token: string | null): object {
+        return {
+            Authorization: `Bearer ${token}`,
+            'user-agent': `sdk-nodejs/${this.version}`
+        }
     }
 }

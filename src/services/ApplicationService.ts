@@ -26,7 +26,7 @@ export class ApplicationService {
             const resp: AxiosResponse<ApiResponse<any>> = await axios.post(
                 `${this.baseURL}agent-hub/apply/add-lead`,
                 applicant,
-                { headers: { Authorization: `Bearer ${this.bearerTokenAgent}` } }
+                { headers: this.commonService.requestHeaders(this.bearerToken) }
             );
             return this.commonService.addObjectId(resp.data);
         } catch (error: any) {
@@ -40,7 +40,7 @@ export class ApplicationService {
             const response: AxiosResponse<ApiResponse<any>> = await axios.get(
                 `${this.baseURL}agent-hub/apply-apps`,
                 {
-                    headers: { Authorization: `Bearer ${this.bearerTokenAgent}` },
+                    headers: this.commonService.requestHeaders(this.bearerToken),
                     params: { limit: 0, is_archived: 0 }
                 }
             );
@@ -58,10 +58,10 @@ export class ApplicationService {
             }
             const [response, docs] = await Promise.all([
                 axios.get<ApiResponse<any>>(`${this.baseURL}agent-hub/apply-apps/${applicantId}`, {
-                    headers: { Authorization: `Bearer ${this.bearerTokenAgent}` }
+                    headers: this.commonService.requestHeaders(this.bearerToken)
                 }),
                 axios.get<ApiResponse<any>>(`${this.baseURL}agent-hub/apply-documents/${applicantId}`, {
-                    headers: { Authorization: `Bearer ${this.bearerTokenAgent}` },
+                    headers: this.commonService.requestHeaders(this.bearerToken),
                     params: { limit: 0 }
                 })
             ]);
@@ -83,7 +83,7 @@ export class ApplicationService {
         try {
             newData = { ...newData, bank_account_type: '01', slugId: 'financial_information', skipGIACT: true };
             const response = await axios.patch(`${this.baseURL}agent-hub/apply-apps/${dataId}`, newData, {
-                headers: { Authorization: `Bearer ${this.bearerTokenAgent}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return response.status === 200 ? this.retrieveApplicant(dataId) : this.commonService.addObjectId(response.data);
         } catch (error: any) {
@@ -98,7 +98,7 @@ export class ApplicationService {
                 applicantId = applicantId.slice(5);
             }
             const resp = await axios.delete(`${this.baseURL}agent-hub/apply/delete-lead`, {
-                headers: { Authorization: `Bearer ${this.bearerTokenAgent}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
                 data: { MerchantCode: applicantId }
             });
             return this.commonService.addObjectId(resp.data.data);
@@ -115,7 +115,7 @@ export class ApplicationService {
             }
             const response = await axios.post(`${this.baseURL}agent-hub/apply/add-documents`,
                 { MerchantCode: applicantId, MerchantDocuments: [document] },
-                { headers: { Authorization: `Bearer ${this.bearerTokenAgent}` } }
+                { headers: this.commonService.requestHeaders(this.bearerToken) }
             );
             return this.commonService.addObjectId(response.data);
         } catch (error: any) {
@@ -126,7 +126,7 @@ export class ApplicationService {
     async SubAgents() {
         try {
             const response = await axios.get(`${this.baseURL}agent-hub/sub-agents`, {
-                headers: { Authorization: `Bearer ${this.bearerTokenAgent}` }
+                headers: this.commonService.requestHeaders(this.bearerToken)
             });
             return this.commonService.addObjectId(response.data?.data || []);
         } catch (error: any) {
@@ -141,7 +141,7 @@ export class ApplicationService {
                 documentId = documentId.slice(4);
             }
             const resp = await axios.delete(`${this.baseURL}agent-hub/apply/delete-documents`, {
-                headers: { Authorization: `Bearer ${this.bearerTokenAgent}` },
+                headers: this.commonService.requestHeaders(this.bearerToken),
                 data: { 'MerchantDocuments': [{ 'DocumentCode': documentId }] }
             });
             return this.commonService.addObjectId(resp.data);
@@ -160,7 +160,7 @@ export class ApplicationService {
                 `${this.baseURL}agent-hub/apply/submit-for-signature`,
                 { 'MerchantCode': applicantId },
                 {
-                    headers: { Authorization: `Bearer ${this.bearerTokenAgent}` }
+                    headers: this.commonService.requestHeaders(this.bearerToken)
                 }
             );
             return this.commonService.addObjectId(response.data);

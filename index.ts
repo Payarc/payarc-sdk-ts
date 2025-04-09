@@ -90,7 +90,7 @@ class Payarc {
                 this.payarcConnectBaseUrl = 'http://testBaseUrl';
                 break;
         }
-        this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL);
+        this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL, this.version);
         this.chargeService = new ChargeService(bearerToken, this.baseURL, this.commonService);
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
