@@ -1,10 +1,3 @@
-import { ChargeService } from './src/services/ChargeService';
-import { CustomerService } from './src/services/CustomerService'; 
-import { ApplicationService } from './src/services/ApplicationService';
-import { SplitCampaignService } from './src/services/SplitCampaignService';
-import { DisputeServices } from './src/services/DisputeService';
-import { PlanService } from './src/services/PlanService';
-import { CommonService } from './src/services/CommonService';
 import { BaseListOptions } from './src/models/BaseListOptions.model';
 import { CustomerRequestData } from './src/models/customer/CustomerRequestData.model';
 import { CustomerResponseData } from './src/models/customer/CustomerResponseData.model';
@@ -17,6 +10,14 @@ import { DisputeCasesResponseData } from './src/models/dispute/DisputeCasesRespo
 import { DocumentParameters } from './src/models/dispute/DocumentParameters.model';
 import { SubscriptionData } from './src/models/plan/SubscriptionData.model';
 import { SubscriptionListOptions } from './src/models/plan/SubscriptionListOptions.model';
+import { ChargeService } from './src/services/ChargeService';
+import { CustomerService } from './src/services/CustomerService';
+import { ApplicationService } from './src/services/ApplicationService';
+import { SplitCampaignService } from './src/services/SplitCampaignService';
+import { DisputeServices } from './src/services/DisputeService';
+import { PlanService } from './src/services/PlanService';
+import { PayarcConnectService } from './src/services/PayarcConnectService';
+import { CommonService } from './src/services/CommonService';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -25,9 +26,11 @@ class Payarc {
     private splitCampaignService: SplitCampaignService;
     private disputeService: DisputeServices;
     private planService: PlanService;
+    private payarcConnectService: PayarcConnectService;
     private commonService: CommonService;
     private baseURL: string;
-    private payarcConnectBaseUrl?: string;
+    private payarcConnectBaseUrl: string;
+    private payarcConnectAccessToken?: string;
     private bearerToken: string | null;
     private bearerTokenAgent: string | null;
 
@@ -62,7 +65,7 @@ class Payarc {
         list: () => Promise<any>,
         retrieve: (campaign: string | CampaignResponseData) => Promise<any>,
         update: (campaign: string | CampaignResponseData, splitCampaignData: SplitCampaignRequestData) => Promise<any>,
-        listAccounts: (campaign: string | CampaignResponseData) => Promise<any>,
+        listAccounts: () => Promise<any>,
     };
 
     public disputes: {
@@ -87,6 +90,19 @@ class Payarc {
         }
     }
 
+    public payarcConnect: {
+        login: () => Promise<any>,
+        sale: (tenderType: string, ecrRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
+        void: (payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
+        refund: (amount: number, payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
+        blindCredit: (ecrRefNum: string, amount: number, token: string, expDate: string, deviceSerialNo: string) => Promise<any>,
+        auth: (ecrRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
+        postAuth: (ecrRefNum: string, origRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
+        lastTransaction: (deviceSerialNo: string) => Promise<any>,
+        serverInfo: () => Promise<any>,
+        terminals: () => Promise<any>,
+    };
+
     constructor(
         bearerToken: string | null,
         private baseUrl: string = 'sandbox',
@@ -99,6 +115,7 @@ class Payarc {
         this.baseURL = baseUrl === 'prod' ? 'https://api.payarc.net' : baseUrl === 'sandbox' ? 'https://testapi.payarc.net' : baseUrl;
         this.baseURL = apiVersion === '/v1/' ? `${this.baseURL}${apiVersion}` : `${this.baseURL}/v${apiVersion}/`;
         this.bearerTokenAgent = bearerTokenAgent;
+        this.payarcConnectAccessToken = '';
         switch (baseUrl) {
             case 'prod':
                 this.payarcConnectBaseUrl = 'https://payarcconnectapi.curvpos.com';
@@ -109,6 +126,8 @@ class Payarc {
             case 'test':
                 this.payarcConnectBaseUrl = 'http://testBaseUrl';
                 break;
+            default:
+                this.payarcConnectBaseUrl = baseUrl;
         }
         this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL, this.version);
         this.chargeService = new ChargeService(bearerToken, this.baseURL, this.commonService);
@@ -117,6 +136,7 @@ class Payarc {
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
+        this.payarcConnectService = new PayarcConnectService(bearerToken, this.payarcConnectAccessToken, this.payarcConnectBaseUrl, this.commonService);
         this.charges = {
             create: this.chargeService.createCharge.bind(this.chargeService),
             retrieve: this.chargeService.getCharge.bind(this.chargeService),
@@ -153,7 +173,7 @@ class Payarc {
             addDocument: this.disputeService.addDocumentCase.bind(this.disputeService),
         };
         this.billing = {
-            plan:{
+            plan: {
                 create: this.planService.createPlan.bind(this.planService),
                 list: this.planService.listPlan.bind(this.planService),
                 retrieve: this.planService.getPlan.bind(this.planService),
@@ -167,6 +187,18 @@ class Payarc {
                 }
             }
         }
+        this.payarcConnect = {
+            login: this.payarcConnectService.pcLogin.bind(this.payarcConnectService),
+            sale: this.payarcConnectService.pcSale.bind(this.payarcConnectService),
+            void: this.payarcConnectService.pcVoid.bind(this.payarcConnectService),
+            refund: this.payarcConnectService.pcRefund.bind(this.payarcConnectService),
+            blindCredit: this.payarcConnectService.pcBlindCredit.bind(this.payarcConnectService),
+            auth: this.payarcConnectService.pcAuth.bind(this.payarcConnectService),
+            postAuth: this.payarcConnectService.pcPostAuth.bind(this.payarcConnectService),
+            lastTransaction: this.payarcConnectService.pcLastTransaction.bind(this.payarcConnectService),
+            serverInfo: this.payarcConnectService.pcServerInfo.bind(this.payarcConnectService),
+            terminals: this.payarcConnectService.pcTerminals.bind(this.payarcConnectService),
+        };
     }
 }
 
