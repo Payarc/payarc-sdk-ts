@@ -45,20 +45,22 @@ export class PayarcConnectService {
       const requestBody = { SecretKey: this.bearerToken };
       const response: AxiosResponse<PayarcTokenResponse> = await axios.post(`${this.payarcConnectBaseUrl}/Login`, requestBody);
       const accessToken = response.data?.BearerTokenInfo?.AccessToken;
-
+      // console.log('BaseUrl', this.payarcConnectBaseUrl);
+      // console.log('AccessToken', accessToken);
+      // console.log('Response', response.data);
+      // console.log('BearerToken', this.bearerToken);
       if (accessToken) {
         this.payarcConnectAccessToken = accessToken;
       } else {
         return this.payarcConnectError(seed, response.data);
       }
-
       return response.data;
     } catch (error: any) {
       return CommonService.manageError(seed, error.response || {});
     }
   }
 
-  async pcSale(tenderType: string, ecrRefNum: string, amount: number, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
+  async pcSale(tenderType: string, ecrRefNum: string, amount: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
     return this.sendTransactionRequest({
       TransType: "SALE",
       TenderType: tenderType,
@@ -76,7 +78,7 @@ export class PayarcConnectService {
     }, 'Payarc Connect Void');
   }
 
-  async pcRefund(amount: number, payarcTransactionId: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
+  async pcRefund(amount: string, payarcTransactionId: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
     return this.sendTransactionRequest({
       TransType: "REFUND",
       Amount: amount,
@@ -85,7 +87,7 @@ export class PayarcConnectService {
     }, 'Payarc Connect Refund');
   }
 
-  async pcBlindCredit(ecrRefNum: string, amount: number, token: string, expDate: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
+  async pcBlindCredit(ecrRefNum: string, amount: string, token: string, expDate: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
     return this.sendTransactionRequest({
       TransType: "RETURN",
       ECRRefNum: ecrRefNum,
@@ -96,7 +98,7 @@ export class PayarcConnectService {
     }, 'Payarc Connect Blind Credit');
   }
 
-  async pcAuth(ecrRefNum: string, amount: number, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
+  async pcAuth(ecrRefNum: string, amount: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
     return this.sendTransactionRequest({
       TransType: "AUTH",
       ECRRefNum: ecrRefNum,
@@ -105,7 +107,7 @@ export class PayarcConnectService {
     }, 'Payarc Connect Auth');
   }
 
-  async pcPostAuth(ecrRefNum: string, origRefNum: string, amount: number, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
+  async pcPostAuth(ecrRefNum: string, origRefNum: string, amount: string, deviceSerialNo: string): Promise<PayarcTransactionResponse> {
     return this.sendTransactionRequest({
       TransType: "POSTAUTH",
       ECRRefNum: ecrRefNum,

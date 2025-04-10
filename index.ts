@@ -92,12 +92,12 @@ class Payarc {
 
     public payarcConnect: {
         login: () => Promise<any>,
-        sale: (tenderType: string, ecrRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
+        sale: (tenderType: string, ecrRefNum: string, amount: string, deviceSerialNo: string) => Promise<any>,
         void: (payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
-        refund: (amount: number, payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
-        blindCredit: (ecrRefNum: string, amount: number, token: string, expDate: string, deviceSerialNo: string) => Promise<any>,
-        auth: (ecrRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
-        postAuth: (ecrRefNum: string, origRefNum: string, amount: number, deviceSerialNo: string) => Promise<any>,
+        refund: (amount: string, payarcTransactionId: string, deviceSerialNo: string) => Promise<any>,
+        blindCredit: (ecrRefNum: string, amount: string, token: string, expDate: string, deviceSerialNo: string) => Promise<any>,
+        auth: (ecrRefNum: string, amount: string, deviceSerialNo: string) => Promise<any>,
+        postAuth: (ecrRefNum: string, origRefNum: string, amount: string, deviceSerialNo: string) => Promise<any>,
         lastTransaction: (deviceSerialNo: string) => Promise<any>,
         serverInfo: () => Promise<any>,
         terminals: () => Promise<any>,
@@ -121,7 +121,7 @@ class Payarc {
                 this.payarcConnectBaseUrl = 'https://payarcconnectapi.curvpos.com';
                 break;
             case 'sandbox':
-                this.payarcConnectBaseUrl = 'https://sandbox.payarcconnectapi.curvpos.dev';
+                this.payarcConnectBaseUrl = 'https://payarcconnectapi.curvpos.dev';
                 break;
             case 'test':
                 this.payarcConnectBaseUrl = 'http://testBaseUrl';
