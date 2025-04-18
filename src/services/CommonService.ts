@@ -143,7 +143,7 @@ export class CommonService {
     requestHeaders(token: string | null): object {
         return {
             Authorization: `Bearer ${token}`,
-            'user-agent': `sdk-nodejs/${this.version}`
+            'user-agent': `sdk-typescript/${this.version}`
         }
     }
 }
