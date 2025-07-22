@@ -1,3 +1,13 @@
+
+# Ignore all JavaScript files
+*.js
+
+# Ignore build output (if using default outDir)
+dist/
+build/
+
+# Ignore node_modules
+node_modules/
 # Logs
 logs
 *.log

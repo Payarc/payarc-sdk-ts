@@ -38,6 +38,8 @@ class Payarc {
         create: (obj: any, chargeData?: any) => Promise<any>,
         retrieve: (chargeId: string | any) => Promise<any>,
         list: (searchData?: BaseListOptions) => Promise<any>,
+        listByAgentPayfac: (searchData?: BaseListOptions) => Promise<any>,
+        listByAgentTraditional: (searchData?: BaseListOptions, from_date?: string, to_date?: string) => Promise<any>,
         createRefund: (chargeId: string | any, refundData?: any) => Promise<any>,
     };
 
@@ -130,7 +132,7 @@ class Payarc {
                 this.payarcConnectBaseUrl = baseUrl;
         }
         this.commonService = new CommonService(bearerToken, bearerTokenAgent, this.baseURL, this.version);
-        this.chargeService = new ChargeService(bearerToken, this.baseURL, this.commonService);
+        this.chargeService = new ChargeService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
@@ -141,6 +143,8 @@ class Payarc {
             create: this.chargeService.createCharge.bind(this.chargeService),
             retrieve: this.chargeService.getCharge.bind(this.chargeService),
             list: this.chargeService.listCharge.bind(this.chargeService),
+            listByAgentPayfac: this.chargeService.listChargesByAgentPayfac.bind(this.chargeService),
+            listByAgentTraditional: this.chargeService.listChargesByAgentTraditional.bind(this.chargeService),
             createRefund: this.chargeService.refundCharge.bind(this.chargeService),
         };
         this.customers = {
