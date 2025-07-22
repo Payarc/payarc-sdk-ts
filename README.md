@@ -263,7 +263,7 @@ payarc.charges.listByAgentPayfac()
 This example demonstrates how to list all charges by agent with date constraints:
 
 ```ts
-payarc.charges.listByAgentTraditional({}, "2025-07-19", "2025-07-22")
+payarc.charges.listByAgentTraditional("2025-07-19", "2025-07-22")
     .then(charges => {
         console.log("Charges listed:", charges);
     })

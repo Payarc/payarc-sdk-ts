@@ -140,12 +140,10 @@ export class ChargeService {
         }
     }
 
-    async listChargesByAgentPayfac(searchData: BaseListOptions = {}): Promise<any> {
-        const { limit = 25, page = 1, search = {} } = searchData;
+    async listChargesByAgentPayfac(): Promise<any> {
         try {
             const response = await axios.get<ApiResponse<ChargeResponseData[]>>(`${this.baseURL}agent-hub/merchant-bridge/charges`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                params: { limit, page, ...search },
             });
 
             const charges = response.data.data.map((charge) => this.commonService.addObjectId(charge));
@@ -159,12 +157,11 @@ export class ChargeService {
     }
 
         
-    async listChargesByAgentTraditional(searchData: BaseListOptions = {}, from_date: string | undefined, to_date: string | undefined): Promise<any> {
-        const { limit = 25, page = 1, search = {} } = searchData;
+    async listChargesByAgentTraditional(from_date: string | undefined, to_date: string | undefined): Promise<any> {
         try {
             const response = await axios.get<ApiResponse<ChargeResponseData[]>>(`${this.baseURL}agent/charges`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                params: { limit, page, from_date, to_date, ...search },
+                params: {from_date, to_date },
             });
             const charges = response.data.data.map((charge) => this.commonService.addObjectId(charge));
             const pagination = response.data.meta?.pagination || {};

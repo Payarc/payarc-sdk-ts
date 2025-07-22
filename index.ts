@@ -38,8 +38,8 @@ class Payarc {
         create: (obj: any, chargeData?: any) => Promise<any>,
         retrieve: (chargeId: string | any) => Promise<any>,
         list: (searchData?: BaseListOptions) => Promise<any>,
-        listByAgentPayfac: (searchData?: BaseListOptions) => Promise<any>,
-        listByAgentTraditional: (searchData?: BaseListOptions, from_date?: string, to_date?: string) => Promise<any>,
+        listByAgentPayfac: () => Promise<any>,
+        listByAgentTraditional: (from_date?: string, to_date?: string) => Promise<any>,
         createRefund: (chargeId: string | any, refundData?: any) => Promise<any>,
     };
 
