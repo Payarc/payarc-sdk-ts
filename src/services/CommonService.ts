@@ -22,7 +22,7 @@ export class CommonService {
         private baseURL: string,
         private version: string,
     ) {
-        this.chargeService = new ChargeService(this.bearerToken, this.baseURL, this);
+        this.chargeService = new ChargeService(this.bearerToken, this.bearerTokenAgent, this.baseURL, this);
         this.customerService = new CustomerService(this.bearerToken, this.baseURL, this);
         this.applicationService = new ApplicationService(this.bearerTokenAgent, this.baseURL, this);
         this.splitCampaignService = new SplitCampaignService(this.bearerTokenAgent, this.baseURL, this);

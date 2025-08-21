@@ -13,6 +13,7 @@ interface ApiResponse<T> {
 export class ChargeService {
     constructor(
         private bearerToken: string | null,
+        private bearerTokenAgent: string | null,
         private baseURL: string,
         private commonService: CommonService
     ) { }
@@ -129,6 +130,39 @@ export class ChargeService {
                 params: { limit, page, ...search },
             });
 
+            const charges = response.data.data.map((charge) => this.commonService.addObjectId(charge));
+            const pagination = response.data.meta?.pagination || {};
+            delete pagination["links"];
+
+            return { charges, pagination };
+        } catch (error: any) {
+            return CommonService.manageError({ source: "API List Charges" }, error.response || {});
+        }
+    }
+
+    async listChargesByAgentPayfac(): Promise<any> {
+        try {
+            const response = await axios.get<ApiResponse<ChargeResponseData[]>>(`${this.baseURL}agent-hub/merchant-bridge/charges`, {
+                headers: this.commonService.requestHeaders(this.bearerTokenAgent),
+            });
+
+            const charges = response.data.data.map((charge) => this.commonService.addObjectId(charge));
+            const pagination = response.data.meta?.pagination || {};
+            delete pagination["links"];
+
+            return { charges, pagination };
+        } catch (error: any) {
+            return CommonService.manageError({ source: "API List Charges" }, error.response || {});
+        }
+    }
+
+        
+    async listChargesByAgentTraditional(from_date: string | undefined, to_date: string | undefined): Promise<any> {
+        try {
+            const response = await axios.get<ApiResponse<ChargeResponseData[]>>(`${this.baseURL}agent/charges`, {
+                headers: this.commonService.requestHeaders(this.bearerTokenAgent),
+                params: {from_date, to_date },
+            });
             const charges = response.data.data.map((charge) => this.commonService.addObjectId(charge));
             const pagination = response.data.meta?.pagination || {};
             delete pagination["links"];

@@ -231,6 +231,7 @@ payarc.customers.retrieve('cus_xMADVnA4jjNpV4nN')
 })
 ```
 
+
 ## Listing Charges
 
 ### Example: List Charges with No Constraints
@@ -241,6 +242,34 @@ This example demonstrates how to list all charges without any constraints:
 payarc.charges.list({})
     .then(charges => console.log(charges))
     .catch(error => console.error(error));
+```
+
+## Listing Charges by Agent
+
+### Example: List Charges with No Constraints by Agent (Payfac)
+This example demonstrates how to list all charges by agent without any constraints:
+
+```ts
+payarc.charges.listByAgentPayfac()
+    .then(charges => {
+        console.log("Charges listed:", charges);
+    })
+    .catch(error => {
+        console.error("Error detected:", error);
+    });
+```
+
+### Example: List Charges with Constraints by Agent (Traditional)
+This example demonstrates how to list all charges by agent with date constraints:
+
+```ts
+payarc.charges.listByAgentTraditional("2025-07-19", "2025-07-22")
+    .then(charges => {
+        console.log("Charges listed:", charges);
+    })
+    .catch(error => {
+        console.error("Error detected:", error);
+    });
 ```
 
 ## Retrieving a Charge
