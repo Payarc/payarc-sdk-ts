@@ -155,7 +155,6 @@ export class ChargeService {
             return CommonService.manageError({ source: "API List Charges" }, error.response || {});
         }
     }
-
         
     async listChargesByAgentTraditional(from_date: string | undefined, to_date: string | undefined): Promise<any> {
         try {

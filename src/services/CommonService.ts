@@ -104,6 +104,11 @@ export class CommonService {
                 obj.update = async (planData: Record<string, any>) => await this.planService.updatePlan(obj, planData);
                 obj.delete = async () => await this.planService.deletePlan(obj);
                 obj.createSubscription = async (subscriptionData: Record<string, any>) => await this.planService.createSubscription(obj, subscriptionData);
+            } else if (obj.Batch_Reference_Number || obj.batch_ref_num) { //This is batch object
+                obj.object_id = `brn_${obj.Batch_Reference_Number || obj.batch_ref_num}`
+                obj.object = 'Batch'
+                delete obj.Batch_Reference_Number
+                delete obj.batch_ref_num
             }
 
             for (const key in obj) {

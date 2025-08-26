@@ -18,6 +18,7 @@ import { DisputeServices } from './src/services/DisputeService';
 import { PlanService } from './src/services/PlanService';
 import { PayarcConnectService } from './src/services/PayarcConnectService';
 import { CommonService } from './src/services/CommonService';
+import { BatchService } from './src/services/BatchService';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -26,6 +27,7 @@ class Payarc {
     private splitCampaignService: SplitCampaignService;
     private disputeService: DisputeServices;
     private planService: PlanService;
+    private batchService: BatchService;
     private payarcConnectService: PayarcConnectService;
     private commonService: CommonService;
     private baseURL: string;
@@ -90,7 +92,12 @@ class Payarc {
                 update: (subscriptionId: string, subscriptionData: any) => Promise<any>,
             }
         }
-    }
+    };
+
+    public batches: {
+        listReportsByAgent: (searchData?: BaseListOptions) => Promise<any>,
+        listReportDetailsByAgent: (searchData?: BaseListOptions) => Promise<any>,
+    };
 
     public payarcConnect: {
         login: () => Promise<any>,
@@ -138,6 +145,7 @@ class Payarc {
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
+        this.batchService = new BatchService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
         this.payarcConnectService = new PayarcConnectService(bearerToken, this.payarcConnectAccessToken, this.payarcConnectBaseUrl, this.commonService);
         this.charges = {
             create: this.chargeService.createCharge.bind(this.chargeService),
@@ -190,7 +198,11 @@ class Payarc {
                     update: this.planService.updateSubscription.bind(this.planService),
                 }
             }
-        }
+        };
+        this.batches = {
+            listReportsByAgent: this.batchService.listBatchReportsByAgent.bind(this.batchService),
+            listReportDetailsByAgent: this.batchService.listBatchReportDetailsByAgent.bind(this.batchService),
+        };
         this.payarcConnect = {
             login: this.payarcConnectService.pcLogin.bind(this.payarcConnectService),
             sale: this.payarcConnectService.pcSale.bind(this.payarcConnectService),
