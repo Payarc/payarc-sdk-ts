@@ -49,7 +49,7 @@ export class BatchService {
         }
     }
 
-    async listBatchReportDetailsByAgent(params?: any): Promise<any> {
+    async listBatchReportDetailsByAgent(params?: BaseListOptions): Promise<any> {
         try {
             const { merchant_account_number, reference_number, date } = params || {};
             if (typeof reference_number === 'undefined' || typeof reference_number !== 'string') {

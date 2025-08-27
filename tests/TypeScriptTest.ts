@@ -146,17 +146,26 @@ async function test(): Promise<void> {
     //   })
     //   .catch((error) => console.error("Error:", error));
 
-    payarc.batches.listReportDetailsByAgent({
-        // from_date: '2024-09-01',
-        // to_date: '2024-10-31',
-        merchant_account_number: '700100000084879',
-        reference_number: '633103040001',
-        date: '2024-09-04'
-    })
-      .then((result) => {
-        console.log("Result", JSON.stringify(result, null, '\t'));
-      })
-      .catch((error) => console.error("Error:", error));
+    // payarc.batches.listReportDetailsByAgent({
+    //     // from_date: '2024-09-01',
+    //     // to_date: '2024-10-31',
+    //     merchant_account_number: '700100000084879',
+    //     reference_number: '633103040001',
+    //     date: '2024-09-04'
+    // })
+    //   .then((result) => {
+    //     console.log("Result", JSON.stringify(result, null, '\t'));
+    //   })
+    //   .catch((error) => console.error("Error:", error));
+
+
+      
+payarc.batches.listReportsByAgent({
+    from_date: '2024-09-01',
+    to_date: '2024-10-31'
+  })
+    .then(batches => console.log(batches))
+    .catch(error => console.error(error));
 
     //JSON.stringify(result, null, '\t')
   } catch (error) {
