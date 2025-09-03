@@ -34,7 +34,6 @@ export class BatchService {
                     to_date: tomorrowDate
                 };
             }
-            console.log("Request Params:", { ...params });
             const response = await axios.get<ApiResponse<BatchReportResponseData[]>>(`${this.baseURL}agent/batch/reports`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
                 params: { ...params },
