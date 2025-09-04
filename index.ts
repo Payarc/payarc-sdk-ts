@@ -66,7 +66,7 @@ class Payarc {
         deleteDocument: (documentId: string) => Promise<any>,
     }
 
-    public deposit: {
+    public deposits: {
         list: (searchData?: BaseListOptions) => Promise<any>,
     };
 
@@ -179,7 +179,7 @@ class Payarc {
             submit: this.applicationService.submitApplicantForSignature.bind(this.applicationService),
             deleteDocument: this.applicationService.deleteApplicantDocument.bind(this.applicationService),
         };
-        this.deposit = {
+        this.deposits = {
             list: this.depositService.agentDepositSummary.bind(this.depositService),
         }
         this.splitCampaigns = {
