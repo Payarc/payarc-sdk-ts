@@ -1,14 +1,14 @@
 import axios from "axios";
 import { CommonService } from './CommonService';
 import { BaseListOptions } from "../models/BaseListOptions.model";
-import { Account } from "../models/account/DepositReportResponse";
+import { Account } from "../models/deposit/DepositResponseData";
 
 interface ApiResponse<T> {
     data: T;
     meta?: any;
 }
 
-export class AccountService {
+export class DepositService {
     constructor(
         private bearerToken: string | null,
         private bearerTokenAgent: string | null,
@@ -20,7 +20,7 @@ export class AccountService {
         return date.toISOString().split('T')[0];
     }
 
-    async listDepositReportsByAgent(params?: BaseListOptions): Promise<any> {
+    async agentDepositSummary(params?: BaseListOptions): Promise<any> {
         try {
             if (!params) {
                 const currentDate = new Date();
@@ -37,11 +37,8 @@ export class AccountService {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
                 params: { ...params },
             });
-            const accounts = response.data.data.map((batch) => this.commonService.addObjectId(batch));
-            const pagination = response.data.meta?.pagination || {};
-            delete pagination["links"];
-
-            return { accounts, pagination };
+            const deposits = response.data.data.map((deposit) => this.commonService.addObjectId(deposit));
+            return { deposits };
         } catch (error: any) {
             return CommonService.manageError({ source: "API List deposit reports by agent" }, error.response || {});
         }

@@ -84,6 +84,9 @@ export class CommonService {
                 } else if (obj.object === "Cases") {
                     obj.object = "Dispute";
                     obj.object_id = `dis_${obj.id}`;
+                } else if (obj.object === 'Account') {
+                    obj.object = "Merchant";
+                    obj.object_id = `acc_${obj.id}`;
                 }
             } else if (obj.MerchantCode) {
                 obj.object_id = `appl_${obj.MerchantCode}`;

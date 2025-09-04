@@ -13,6 +13,7 @@ import { SubscriptionListOptions } from './src/models/plan/SubscriptionListOptio
 import { ChargeService } from './src/services/ChargeService';
 import { CustomerService } from './src/services/CustomerService';
 import { ApplicationService } from './src/services/ApplicationService';
+import { DepositService } from './src/services/DepositService';
 import { SplitCampaignService } from './src/services/SplitCampaignService';
 import { DisputeServices } from './src/services/DisputeService';
 import { PlanService } from './src/services/PlanService';
@@ -24,6 +25,7 @@ class Payarc {
     private chargeService: ChargeService;
     private customerService: CustomerService;
     private applicationService: ApplicationService;
+    private depositService: DepositService;
     private splitCampaignService: SplitCampaignService;
     private disputeService: DisputeServices;
     private planService: PlanService;
@@ -63,6 +65,10 @@ class Payarc {
         submit: (applicant: string | ApplicationResponseData) => Promise<any>,
         deleteDocument: (documentId: string) => Promise<any>,
     }
+
+    public deposit: {
+        list: (searchData?: BaseListOptions) => Promise<any>,
+    };
 
     public splitCampaigns: {
         create: (splitCampaignData: SplitCampaignRequestData) => Promise<any>,
@@ -142,6 +148,7 @@ class Payarc {
         this.chargeService = new ChargeService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
         this.customerService = new CustomerService(bearerToken, this.baseURL, this.commonService);
         this.applicationService = new ApplicationService(bearerTokenAgent, this.baseURL, this.commonService);
+        this.depositService = new DepositService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
         this.splitCampaignService = new SplitCampaignService(bearerTokenAgent, this.baseURL, this.commonService);
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
@@ -172,6 +179,9 @@ class Payarc {
             submit: this.applicationService.submitApplicantForSignature.bind(this.applicationService),
             deleteDocument: this.applicationService.deleteApplicantDocument.bind(this.applicationService),
         };
+        this.deposit = {
+            list: this.depositService.agentDepositSummary.bind(this.depositService),
+        }
         this.splitCampaigns = {
             create: this.splitCampaignService.createCampaign.bind(this.splitCampaignService),
             list: this.splitCampaignService.getAllCampaigns.bind(this.splitCampaignService),
