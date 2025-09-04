@@ -101,8 +101,8 @@ class Payarc {
     };
 
     public batches: {
-        listReportsByAgent: (searchData?: BaseListOptions) => Promise<any>,
-        listReportDetailsByAgent: (searchData?: BaseListOptions) => Promise<any>,
+        list: (searchData?: BaseListOptions) => Promise<any>,
+        retrieve: (searchData?: BaseListOptions) => Promise<any>,
     };
 
     public payarcConnect: {
@@ -210,8 +210,8 @@ class Payarc {
             }
         };
         this.batches = {
-            listReportsByAgent: this.batchService.listBatchReportsByAgent.bind(this.batchService),
-            listReportDetailsByAgent: this.batchService.listBatchReportDetailsByAgent.bind(this.batchService),
+            list: this.batchService.listBatchReportsByAgent.bind(this.batchService),
+            retrieve: this.batchService.listBatchReportDetailsByAgent.bind(this.batchService),
         };
         this.payarcConnect = {
             login: this.payarcConnectService.pcLogin.bind(this.payarcConnectService),

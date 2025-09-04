@@ -875,7 +875,7 @@ response contains detailed transaction and settlement information for each merch
 account within the given date range.
 
 ```ts
-payarc.batches.listReportsByAgent({
+payarc.batches.list({
     from_date: '2025-07-19',
     to_date: '2025-07-22'
   })
@@ -892,7 +892,7 @@ It provides a list of individual transactions for that batch, along with batch t
 [Get parameters for desired batch report here](#example-list-batch-reports-by-agent-with-constraints)
 
 ```ts
-payarc.batches.listReportDetailsByAgent({
+payarc.batches.retrieve({
     merchant_account_number: '000000000000000',
     reference_number: '000000000000',
     date: 'YYYY-MM-DD'
