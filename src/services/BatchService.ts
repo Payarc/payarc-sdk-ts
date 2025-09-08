@@ -3,6 +3,7 @@ import { CommonService } from './CommonService';
 import { BaseListOptions } from "../models/BaseListOptions.model";
 import { BatchReportResponseData } from "../models/batch/BatchReportResponseData";
 import { BatchData, BatchReportDetailResponseData } from "../models/batch/BatchReportDetailResponseData";
+import { BatchDetailRequestData } from "../models/batch/BatchDetailRequestData";
 
 interface ApiResponse<T> {
     data: T;
@@ -48,9 +49,9 @@ export class BatchService {
         }
     }
 
-    async listBatchReportDetailsByAgent(params?: BaseListOptions): Promise<any> {
+    async listBatchReportDetailsByAgent(batchDetailData?: BatchDetailRequestData): Promise<any> {
         try {
-            const { merchant_account_number, reference_number, date } = params || {};
+            const { merchant_account_number, reference_number, date } = batchDetailData || {};
             if (typeof reference_number === 'undefined' || typeof reference_number !== 'string') {
                 console.error("Reference number is not defined or is not a string.");
                 return [];
