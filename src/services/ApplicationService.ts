@@ -5,6 +5,7 @@ import { ApplicationResponseData } from '../models/application/ApplicationRespon
 import { DocumentResponseData } from '../models/application/DocumentResponseData.model';
 import { BaseListOptions } from '../models/BaseListOptions.model';
 import { MerchantDocument } from '../models/application/MerchantDocument.model';
+import { ApplicationStatusData } from '../models/application/ApplicationStatus.model';
 
 interface ApiResponse<T> {
     data: T;
@@ -168,4 +169,28 @@ export class ApplicationService {
             return CommonService.manageError({ source: 'API Submit for signature' }, error.response || {});
         }
     }
+
+    async getLeadStatus(applicant: ApplicationResponseData | string) {
+        try {
+
+            if (!applicant) {
+                throw new Error('Applicant is required');
+            }
+            let applicantId = typeof applicant === 'string' ? applicant : applicant.object_id || '';
+            if (applicantId.startsWith('appl_')) {
+                applicantId = applicantId.slice(5);
+            }
+            const response = await axios.post(
+                    `${this.baseURL}agent-hub/apply/lead-status`, {
+                    headers: this.commonService.requestHeaders(this.bearerTokenAgent),
+                    data: { MerchantCode: applicantId }
+                });
+     
+            return this.commonService.addObjectId(response.data);
+
+        } catch (error: any) {
+            return CommonService.manageError({ source: 'API Application Lead Status' }, error.response || {});
+        }
+    }
+
 }

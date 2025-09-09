@@ -95,6 +95,7 @@ export class CommonService {
                 obj.delete = async () => await this.applicationService.deleteApplicant(obj);
                 obj.update = async (appData: Record<string, any>) => await this.applicationService.updateApplicant(obj, appData);
                 obj.listSubAgents = async () => await this.applicationService.SubAgents();
+                // obj.getLeadStatus = async () => await this.applicationService.getLeadStatus(obj);
             } else if (obj.plan_id) { //This is plan object
                 obj.object_id = obj.plan_id
                 obj.object = 'Plan'
