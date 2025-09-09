@@ -56,18 +56,19 @@ export class BatchService {
                 console.error("Reference number is not defined or is not a string.");
                 return [];
             }
+            let refNum = reference_number.startsWith('brn_') ? reference_number.slice(4) : reference_number;
             const response = await axios.get<ApiResponse<BatchReportDetailResponseData>>(`${this.baseURL}agent/batch/reports/details/${merchant_account_number}`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                params: { reference_number, date },
+                params: { reference_number: refNum, date },
             });
             const apiResponseData = response.data.data;
-            const batchDetails = apiResponseData?.[reference_number];
+            const batchDetails = apiResponseData?.[refNum];
             let batchData: BatchData[] = [];
             if (batchDetails) {
                 batchData = batchDetails.batch_data.map((batch) => this.commonService.addObjectId(batch));
             }
-            if (apiResponseData && reference_number in apiResponseData) {
-                apiResponseData[reference_number].batch_data = batchData;
+            if (apiResponseData && refNum in apiResponseData) {
+                apiResponseData[refNum].batch_data = batchData;
             }
             return response.data;
         } catch (error: any) {
