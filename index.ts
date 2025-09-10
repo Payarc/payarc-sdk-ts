@@ -65,6 +65,7 @@ class Payarc {
         addDocument: (applicant: string | ApplicationResponseData, document: MerchantDocument) => Promise<any>,
         submit: (applicant: string | ApplicationResponseData) => Promise<any>,
         deleteDocument: (documentId: string) => Promise<any>,
+        status: (applicant: string | ApplicationResponseData) => Promise<any>,
     }
 
     public deposits: {
@@ -179,6 +180,7 @@ class Payarc {
             addDocument: this.applicationService.addApplicantDocument.bind(this.applicationService),
             submit: this.applicationService.submitApplicantForSignature.bind(this.applicationService),
             deleteDocument: this.applicationService.deleteApplicantDocument.bind(this.applicationService),
+            status: this.applicationService.status.bind(this.applicationService),
         };
         this.deposits = {
             list: this.depositService.agentDepositSummary.bind(this.depositService),

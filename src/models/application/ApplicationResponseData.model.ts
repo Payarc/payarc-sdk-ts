@@ -220,6 +220,7 @@ export interface ApplicationResponseData extends BaseResponse {
     delete?: () => Promise<BaseResponse | null>;
     update?: (appData: Record<string, any>) => Promise<BaseResponse | null>;
     listSubAgents?: () => Promise<BaseResponse | null>;
+    getLeadStatus?: () => Promise<BaseResponse | null>;
 }
 
 export interface AgentTagValues {

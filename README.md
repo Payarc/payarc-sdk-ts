@@ -672,6 +672,25 @@ Again we search for the last candidate and remove first found (if exists) docume
 ```ts
 payarc.applications.deleteDocument('doc_z53dmgo0b6g6wral').then((res)=>{console.log('Document is removed ', res)})
 ```
+### Application Lead Status
+Use this function to get the current onboarding status of a candidate merchant. You can pass either the application ID (with or without the `appl_` prefix) or an application object.
+```ts
+// Get status by application ID
+payarc.applications.status('appl_vajm67vv9m7bxrlk')
+    .then((status) => { console.log('Application Status:', status) })
+    .catch((erro) => { console.log('We have a problem ', erro) })
+```
+
+```ts
+// Get status by application object
+payarc.applications.list()
+    .then((res) => {
+        const applicant = res[0]
+        return payarc.applications.status(applicant)
+    })
+    .then((status) => { console.log('Application Status:', status) })
+    .catch((erro) => { console.log('We have a problem ', erro) })
+```
 ### Signature
 As agent or ISV the process is completed once the contract between Payarc and your client is sent to this client for signature. Once all documents and data is collected method `submit` of the candidate merchant must be invoked, here is an example 
 ```ts
