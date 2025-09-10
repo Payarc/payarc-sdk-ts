@@ -31,8 +31,11 @@ const payarc = new Payarc(
 async function getApplicationStatus(id : string) {
 
     try {
-        const status = await payarc.applications.getLeadStatus(id);
+        const applicationList = await payarc.applications.list();
+        // applicationList[0] or id or applicationList[0].object_id
+        const status = await payarc.applications.status(applicationList[0]);
         console.log("Application Status:", JSON.stringify(status, null, 2));
+
     } catch (error: any) {
         console.log("Application Status Error:", error.message);
     }

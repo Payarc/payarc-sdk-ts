@@ -170,9 +170,8 @@ export class ApplicationService {
         }
     }
 
-    async getLeadStatus(applicant: ApplicationResponseData | string) {
+    async status(applicant: ApplicationResponseData | string) {
         try {
-
             if (!applicant) {
                 throw new Error('Applicant is required');
             }
@@ -181,11 +180,10 @@ export class ApplicationService {
                 applicantId = applicantId.slice(5);
             }
             const response = await axios.post(
-                    `${this.baseURL}agent-hub/apply/lead-status`, {
-                    headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                    data: { MerchantCode: applicantId }
-                });
-     
+                `${this.baseURL}agent-hub/apply/lead-status`,
+                { MerchantCode: applicantId },
+                { headers: this.commonService.requestHeaders(this.bearerTokenAgent) }
+            );
             return this.commonService.addObjectId(response.data);
 
         } catch (error: any) {

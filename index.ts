@@ -60,7 +60,7 @@ class Payarc {
         addDocument: (applicant: string | ApplicationResponseData, document: MerchantDocument) => Promise<any>,
         submit: (applicant: string | ApplicationResponseData) => Promise<any>,
         deleteDocument: (documentId: string) => Promise<any>,
-        getLeadStatus: (applicant: string | ApplicationResponseData) => Promise<any>,
+        status: (applicant: string | ApplicationResponseData) => Promise<any>,
     }
 
     public splitCampaigns: {
@@ -164,7 +164,7 @@ class Payarc {
             addDocument: this.applicationService.addApplicantDocument.bind(this.applicationService),
             submit: this.applicationService.submitApplicantForSignature.bind(this.applicationService),
             deleteDocument: this.applicationService.deleteApplicantDocument.bind(this.applicationService),
-            getLeadStatus: this.applicationService.getLeadStatus.bind(this.applicationService),
+            status: this.applicationService.status.bind(this.applicationService),
         };
         this.splitCampaigns = {
             create: this.splitCampaignService.createCampaign.bind(this.splitCampaignService),
