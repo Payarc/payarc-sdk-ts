@@ -20,6 +20,7 @@ import { PlanService } from './src/services/PlanService';
 import { PayarcConnectService } from './src/services/PayarcConnectService';
 import { CommonService } from './src/services/CommonService';
 import { BatchService } from './src/services/BatchService';
+import { BatchDetailRequestData } from './src/models/batch/BatchDetailRequestData';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -102,7 +103,7 @@ class Payarc {
 
     public batches: {
         list: (searchData?: BaseListOptions) => Promise<any>,
-        retrieve: (searchData?: BaseListOptions) => Promise<any>,
+        retrieve: (batchDetailData?: BatchDetailRequestData) => Promise<any>,
     };
 
     public payarcConnect: {

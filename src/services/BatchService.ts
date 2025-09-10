@@ -3,6 +3,7 @@ import { CommonService } from './CommonService';
 import { BaseListOptions } from "../models/BaseListOptions.model";
 import { BatchReportResponseData } from "../models/batch/BatchReportResponseData";
 import { BatchData, BatchReportDetailResponseData } from "../models/batch/BatchReportDetailResponseData";
+import { BatchDetailRequestData } from "../models/batch/BatchDetailRequestData";
 
 interface ApiResponse<T> {
     data: T;
@@ -48,25 +49,26 @@ export class BatchService {
         }
     }
 
-    async listBatchReportDetailsByAgent(params?: BaseListOptions): Promise<any> {
+    async listBatchReportDetailsByAgent(batchDetailData?: BatchDetailRequestData): Promise<any> {
         try {
-            const { merchant_account_number, reference_number, date } = params || {};
+            const { merchant_account_number, reference_number, date } = batchDetailData || {};
             if (typeof reference_number === 'undefined' || typeof reference_number !== 'string') {
                 console.error("Reference number is not defined or is not a string.");
                 return [];
             }
+            let refNum = reference_number.startsWith('brn_') ? reference_number.slice(4) : reference_number;
             const response = await axios.get<ApiResponse<BatchReportDetailResponseData>>(`${this.baseURL}agent/batch/reports/details/${merchant_account_number}`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                params: { reference_number, date },
+                params: { reference_number: refNum, date },
             });
             const apiResponseData = response.data.data;
-            const batchDetails = apiResponseData?.[reference_number];
+            const batchDetails = apiResponseData?.[refNum];
             let batchData: BatchData[] = [];
             if (batchDetails) {
                 batchData = batchDetails.batch_data.map((batch) => this.commonService.addObjectId(batch));
             }
-            if (apiResponseData && reference_number in apiResponseData) {
-                apiResponseData[reference_number].batch_data = batchData;
+            if (apiResponseData && refNum in apiResponseData) {
+                apiResponseData[refNum].batch_data = batchData;
             }
             return response.data;
         } catch (error: any) {

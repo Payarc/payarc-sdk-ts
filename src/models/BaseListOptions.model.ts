@@ -6,8 +6,5 @@ export interface BaseListOptions {
     'report_date[gte]'?: string;
     'report_date[lte]'?: string;
     from_date?: string;
-    to_date?: string;
-    merchant_account_number?: string;
-    reference_number?: string;
-    date?: string;    
+    to_date?: string;   
   }
