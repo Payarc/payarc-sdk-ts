@@ -115,7 +115,7 @@ class Payarc {
     ) {
         this.bearerToken = bearerToken;
         this.version = version;
-        this.baseURL = baseUrl === 'prod' ? 'https://api.payarc.net' : baseUrl === 'sandbox' ? 'http://localapi19.payarc.net' : baseUrl;
+        this.baseURL = baseUrl === 'prod' ? 'https://api.payarc.net' : baseUrl === 'sandbox' ? 'https://testapi.payarc.net' : baseUrl;
         this.baseURL = apiVersion === '/v1/' ? `${this.baseURL}${apiVersion}` : `${this.baseURL}/v${apiVersion}/`;
         this.bearerTokenAgent = bearerTokenAgent;
         this.payarcConnectAccessToken = '';
