@@ -54,6 +54,9 @@ export class BatchService {
             if (batchDetailData?.reference_number && batchDetailData.reference_number.startsWith('brn_')) {
                 batchDetailData.reference_number = batchDetailData.reference_number.slice(4);
             }
+            if (batchDetailData?.reference_number && batchDetailData.reference_number.startsWith('brn_')) {
+                batchDetailData.reference_number = batchDetailData.reference_number.slice(4);
+            }
             const { merchant_account_number, reference_number, date } = batchDetailData || {};
         if (!reference_number) {
             return CommonService.manageError({ source: 'API Batch Report Details by Agent' }, 'Reference number is required.' );

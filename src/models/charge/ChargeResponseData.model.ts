@@ -1,4 +1,5 @@
 import { BaseResponse } from "../BaseResponse.model";
+import { InstructionalFundingResponseData } from "../instructionalFunding/InstructionalFundingResponseData.model";
 
 export interface ChargeResponseData extends BaseResponse  {
     object: string;
@@ -58,6 +59,7 @@ export interface ChargeResponseData extends BaseResponse  {
     toll_amount?: number;
     refund: Refund;
     card: CardData;
+    splits?: Split;
     sec_code?: string;
   }
   
@@ -67,6 +69,10 @@ export interface ChargeResponseData extends BaseResponse  {
   
   export interface CardData {
     data: Card;
+  }
+
+  export interface Split {
+    data: InstructionalFundingResponseData[];
   }
   
   export interface Card {

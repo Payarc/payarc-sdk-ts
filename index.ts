@@ -21,6 +21,7 @@ import { PayarcConnectService } from './src/services/PayarcConnectService';
 import { CommonService } from './src/services/CommonService';
 import { BatchService } from './src/services/BatchService';
 import { BatchDetailRequestData } from './src/models/batch/BatchDetailRequestData';
+import { InstructionalFundingService } from './src/services/InstructionalFundingService';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -31,6 +32,7 @@ class Payarc {
     private disputeService: DisputeServices;
     private planService: PlanService;
     private batchService: BatchService;
+    private instructionalFundingService: InstructionalFundingService;
     private payarcConnectService: PayarcConnectService;
     private commonService: CommonService;
     private baseURL: string;
@@ -108,6 +110,11 @@ class Payarc {
         retrieve: (batchDetailData?: BatchDetailRequestData) => Promise<any>,
     };
 
+    public instructionalFunding: {
+        create: (obj: any, instructionalFundingData?: any) => Promise<any>,
+        list: (searchData?: BaseListOptions) => Promise<any>
+    };
+
     public payarcConnect: {
         login: () => Promise<any>,
         sale: (tenderType: string, ecrRefNum: string, amount: string, deviceSerialNo: string) => Promise<any>,
@@ -156,6 +163,7 @@ class Payarc {
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
         this.batchService = new BatchService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
+        this.instructionalFundingService = new InstructionalFundingService(bearerToken, this.baseURL, this.commonService);
         this.payarcConnectService = new PayarcConnectService(bearerToken, this.payarcConnectAccessToken, this.payarcConnectBaseUrl, this.commonService);
         this.charges = {
             create: this.chargeService.createCharge.bind(this.chargeService),
@@ -217,6 +225,10 @@ class Payarc {
         this.batches = {
             list: this.batchService.listBatchReportsByAgent.bind(this.batchService),
             retrieve: this.batchService.listBatchReportDetailsByAgent.bind(this.batchService),
+        };
+        this.instructionalFunding = {
+            create: this.instructionalFundingService.createInstructionalFunding.bind(this.instructionalFundingService),
+            list: this.instructionalFundingService.listInstructionalFunding.bind(this.instructionalFundingService)
         };
         this.payarcConnect = {
             login: this.payarcConnectService.pcLogin.bind(this.payarcConnectService),
