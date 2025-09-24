@@ -39,12 +39,17 @@ export class InstructionalFundingService {
     async listInstructionalFunding(searchData: BaseListOptions = {}): Promise<any> {
         const { limit = 25, page = 1, include = 'charge' } = searchData;
         try {
-            const response: AxiosResponse<ApiResponse<InstructionalFundingResponseData>> = await axios.get(`${this.baseURL}instructional_funding`,{
+            const response: AxiosResponse<ApiResponse<InstructionalFundingResponseData[]>> = await axios.get(`${this.baseURL}instructional_funding`,{
                     headers: this.commonService.requestHeaders(this.bearerToken),
                     params: { limit, page, include }
                 }
             );
-            return this.commonService.addObjectId(response.data.data);
+            const chargeSplits = response.data.data.map((funding) => this.commonService.addObjectId(funding));
+            const pagination = response.data.meta?.pagination || {};
+            delete pagination["links"];
+
+            return { chargeSplits, pagination };
+           // return this.commonService.addObjectId(response.data.data);
         } catch (error: any) {
             return CommonService.manageError({ source: 'API list Instructional Funding' }, error.response || {});
         }
