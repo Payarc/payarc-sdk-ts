@@ -35,6 +35,7 @@ export class CommonService {
                 if (obj.object === 'Charge') {
                     obj.object_id = `ch_${obj.id}`;
                     obj.createRefund = async (params: Record<string, any>) => await this.chargeService.refundCharge(obj, params);
+                    obj.tipAdjust = async (params: Record<string, any>) => await this.chargeService.tipAdjustCharge(obj, params);
                 } else if (obj.object === 'customer') {
                     obj.object_id = `cus_${obj.customer_id}`;
                     obj.update = async (customerData: CustomerRequestData) => await this.customerService.updateCustomer(obj, customerData);

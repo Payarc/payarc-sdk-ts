@@ -51,26 +51,37 @@ export class BatchService {
 
     async listBatchReportDetailsByAgent(batchDetailData?: BatchDetailRequestData): Promise<any> {
         try {
-            const { merchant_account_number, reference_number, date } = batchDetailData || {};
-            if (typeof reference_number === 'undefined' || typeof reference_number !== 'string') {
-                console.error("Reference number is not defined or is not a string.");
-                return [];
+            if (batchDetailData?.reference_number && batchDetailData.reference_number.startsWith('brn_')) {
+                batchDetailData.reference_number = batchDetailData.reference_number.slice(4);
             }
-            let refNum = reference_number.startsWith('brn_') ? reference_number.slice(4) : reference_number;
+            const { merchant_account_number, reference_number, date } = batchDetailData || {};
+        if (!reference_number) {
+            return CommonService.manageError({ source: 'API Batch Report Details by Agent' }, 'Reference number is required.' );
+        }
             const response = await axios.get<ApiResponse<BatchReportDetailResponseData>>(`${this.baseURL}agent/batch/reports/details/${merchant_account_number}`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                params: { reference_number: refNum, date },
+                params: { reference_number: reference_number, date: date },
             });
             const apiResponseData = response.data.data;
-            const batchDetails = apiResponseData?.[refNum];
+            const batchDetails = apiResponseData?.[reference_number];
             let batchData: BatchData[] = [];
-            if (batchDetails) {
-                batchData = batchDetails.batch_data.map((batch) => this.commonService.addObjectId(batch));
+            if (batchDetails && batchDetails.batch_data) {
+                batchData = this.commonService.addObjectId(batchDetails.batch_data);
             }
-            if (apiResponseData && refNum in apiResponseData) {
-                apiResponseData[refNum].batch_data = batchData;
+            if (apiResponseData && apiResponseData[reference_number]) {
+                apiResponseData[reference_number].batch_data = batchData;
             }
-            return response.data;
+            const updatedBatchDetail = {
+                ...response.data,
+                data: {
+                    ...apiResponseData,
+                    [reference_number]: {
+                        ...batchDetails,
+                        batch_data: batchData
+                    }
+                }
+            };
+            return updatedBatchDetail;
         } catch (error: any) {
             return CommonService.manageError({ source: "API List batch details by agent" }, error.response || {});
         }

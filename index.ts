@@ -46,6 +46,7 @@ class Payarc {
         listByAgentPayfac: () => Promise<any>,
         listByAgentTraditional: (from_date?: string, to_date?: string) => Promise<any>,
         createRefund: (chargeId: string | any, refundData?: any) => Promise<any>,
+        tipAdjust: (chargeId: string | any, tipData: any) => Promise<any>,
     };
 
     public customers: {
@@ -163,6 +164,7 @@ class Payarc {
             listByAgentPayfac: this.chargeService.listChargesByAgentPayfac.bind(this.chargeService),
             listByAgentTraditional: this.chargeService.listChargesByAgentTraditional.bind(this.chargeService),
             createRefund: this.chargeService.refundCharge.bind(this.chargeService),
+            tipAdjust: this.chargeService.tipAdjustCharge.bind(this.chargeService),
         };
         this.customers = {
             create: this.customerService.createCustomer.bind(this.customerService),
