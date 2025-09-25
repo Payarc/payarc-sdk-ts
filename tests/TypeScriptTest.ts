@@ -29,7 +29,7 @@ const payarc = new Payarc(
 async function test(): Promise<void> {
   try {
 
-     await payarc.payarcConnect
+    await payarc.payarcConnect
     .login()
     .catch((error) => console.error("Error detected:", error));
 
