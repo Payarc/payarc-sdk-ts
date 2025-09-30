@@ -13,7 +13,7 @@ const payarcConnectAccessToken: string | undefined = process.env.PAYARC_PAYARCCO
 const apiVersion: string = '/v1/';
 const version: string = '1.0';
 
-if (!bearerToken || !baseUrl || !bearerTokenAgent || !bearerTokenWithSubagent || !accountListExistingBearerToken || !disputeCaseBearerToken || !payarcConnectAccessToken ) {
+if (!bearerToken || !baseUrl || !bearerTokenAgent || !bearerTokenWithSubagent || !accountListExistingBearerToken || !disputeCaseBearerToken || !payarcConnectAccessToken) {
   throw new Error('Missing required environment variables.');
 }
 
@@ -28,75 +28,55 @@ const payarc = new Payarc(
 
 async function test(): Promise<void> {
   try {
+    // Delete Payee
+    payarc.payee.delete("appy_xmylbgqwwkpgv98r")
+      .then((response) => {
+        console.log(response);
+      });
 
-    await payarc.payarcConnect
-    .login()
-    .catch((error) => console.error("Error detected:", error));
+    // List Payees
+    payarc.payee.list()
+      .then((response) => {
+        console.log(JSON.stringify(response, null, '\t'));
+      });
 
-    const tenderType: string = "CREDIT";
-    const ecrRefNum: string = "123456789015";
-    const amount: string = "1";
-    const deviceSerialNo: string = "1850401309";
-    const payarcTransactionId: string = "MnBROWBMynbLyOWL";
-    const token: string = "4B195BB1FFA25228";
-    const expDate:string = "0227";
-    const origRefNum:string = "50";
-
-
-    // payarc.payarcConnect
-    //   .sale(tenderType, ecrRefNum, amount, deviceSerialNo)
-    //   .then((result) => { console.log("Result", result) })
-    //   .catch((error) => console.error("Error:", error))
-
-  
-      // payarc.payarcConnect
-      //   .void(payarcTransactionId, deviceSerialNo)
-      //   .then((result) => { console.log("Result", result); })
-      //   .catch((error) => console.error("Error:", error));
-
-    
-        // payarc.payarcConnect
-        // .refund(amount, payarcTransactionId, deviceSerialNo)
-        // .then((result) => {console.log("Result", result);})
-        // .catch((error) => console.error("Error:", error));
-
-        // payarc.payarcConnect
-        // .blindCredit(ecrRefNum, amount, token, expDate, deviceSerialNo)
-        // .then((result) => {console.log("Result", result);})
-        // .catch((error) => console.error("Error:", error));
-
-        
-    // payarc.payarcConnect
-    // .auth(ecrRefNum, amount, deviceSerialNo)
-    // .then((result) => {console.log("Result", result);})
-    // .catch((error) => console.error("Error:", error));
-
-    
-    // payarc.payarcConnect
-    // .postAuth(ecrRefNum, origRefNum, amount, deviceSerialNo)
-    // .then((result) => {console.log("Result", result);})
-    // .catch((error) => console.error("Error:", error));
-
-
-    // payarc.payarcConnect
-    // .lastTransaction(deviceSerialNo)
-    // .then((result) => {console.log("Result", result);})
-    // .catch((error) => console.error("Error:", error));
-
-    // payarc.payarcConnect
-    // .serverInfo()
-    // .then((result) => {console.log("Result", result);})
-    // .catch((error) => console.error("Error:", error));
-
-
-    // payarc.payarcConnect
-    // .terminals()
-    // .then((result) => {console.log("Result", result);})
-    // .catch((error) => console.error("Error:", error));
-
-    //JSON.stringify(result, null, '\t')
+    // Create Payee
+    payarc.payee.create({
+      type: "sole_prop",
+      personal_info: {
+        first_name: "TestName",
+        last_name: "TestLast",
+        ssn: "123456789",
+        dob: "2005-06-10"
+      },
+      business_info: {
+        legal_name: "Test Business",
+        ein: "12-3456789",
+        irs_filing_type: "\"A\""
+      },
+      contact_info: {
+        email: "test@example.com",
+        phone_number: "1234567890"
+      },
+      address_info: {
+        street: "123 Test St",
+        city: "Test City",
+        zip_code: "12345",
+        county_code: "NY"
+      },
+      banking_info: {
+        dda: "123456789",
+        routing: "987654321"
+      },
+      foundation_date: "2025-09-15",
+      date_incorporated: "2025-09-15"
+    })
+      .then((response) => {
+        console.log("Payee created: ", response);
+      })
+      .catch(error => console.error(error));
   } catch (error) {
-    console.error('Error fetching customers:', error);
+    console.error('Error:', error);
   }
 }
 
