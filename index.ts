@@ -22,6 +22,10 @@ import { CommonService } from './src/services/CommonService';
 import { BatchService } from './src/services/BatchService';
 import { BatchDetailRequestData } from './src/models/batch/BatchDetailRequestData';
 import { InstructionalFundingService } from './src/services/InstructionalFundingService';
+import { PayeeService } from './src/services/PayeeService';
+import { PayeeResponseData } from './src/models/payee/PayeeResponseData.model';
+import { PayeeRequestData } from './src/models/payee/PayeeRequestData.model';
+import { BaseResponse } from './src/models/BaseResponse.model';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -32,6 +36,7 @@ class Payarc {
     private disputeService: DisputeServices;
     private planService: PlanService;
     private batchService: BatchService;
+    private payeeService: PayeeService;
     private instructionalFundingService: InstructionalFundingService;
     private payarcConnectService: PayarcConnectService;
     private commonService: CommonService;
@@ -110,6 +115,12 @@ class Payarc {
         retrieve: (batchDetailData?: BatchDetailRequestData) => Promise<any>,
     };
 
+    public payee: {
+        create: (payeeData: PayeeRequestData) => Promise<BaseResponse>,
+        list: (searchData?: BaseListOptions) => Promise<any>,
+        delete: (payee: string | PayeeResponseData) => Promise<any>,
+    };
+
     public instructionalFunding: {
         create: (obj: any, instructionalFundingData?: any) => Promise<any>,
         list: (searchData?: BaseListOptions) => Promise<any>
@@ -163,6 +174,7 @@ class Payarc {
         this.disputeService = new DisputeServices(bearerToken, this.baseURL, this.commonService);
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
         this.batchService = new BatchService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
+        this.payeeService = new PayeeService(bearerTokenAgent, this.baseURL, this.commonService);
         this.instructionalFundingService = new InstructionalFundingService(bearerToken, this.baseURL, this.commonService);
         this.payarcConnectService = new PayarcConnectService(bearerToken, this.payarcConnectAccessToken, this.payarcConnectBaseUrl, this.commonService);
         this.charges = {
@@ -225,6 +237,11 @@ class Payarc {
         this.batches = {
             list: this.batchService.listBatchReportsByAgent.bind(this.batchService),
             retrieve: this.batchService.listBatchReportDetailsByAgent.bind(this.batchService),
+        };
+        this.payee = {
+            create: this.payeeService.addPayee.bind(this.payeeService),
+            list: this.payeeService.listPayee.bind(this.payeeService),
+            delete: this.payeeService.deletePayee.bind(this.payeeService),
         };
         this.instructionalFunding = {
             create: this.instructionalFundingService.createInstructionalFunding.bind(this.instructionalFundingService),
