@@ -54,16 +54,13 @@ export class BatchService {
             if (batchDetailData?.reference_number && batchDetailData.reference_number.startsWith('brn_')) {
                 batchDetailData.reference_number = batchDetailData.reference_number.slice(4);
             }
-            if (batchDetailData?.reference_number && batchDetailData.reference_number.startsWith('brn_')) {
-                batchDetailData.reference_number = batchDetailData.reference_number.slice(4);
-            }
             const { merchant_account_number, reference_number, date } = batchDetailData || {};
-        if (!reference_number) {
-            return CommonService.manageError({ source: 'API Batch Report Details by Agent' }, 'Reference number is required.' );
-        }
+            if (!reference_number) {
+                return CommonService.manageError({ source: 'API Batch Report Details by Agent' }, 'Reference number is required.');
+            }
             const response = await axios.get<ApiResponse<BatchReportDetailResponseData>>(`${this.baseURL}agent/batch/reports/details/${merchant_account_number}`, {
                 headers: this.commonService.requestHeaders(this.bearerTokenAgent),
-                params: { reference_number: reference_number, date: date },
+                params: { reference_number: reference_number, date },
             });
             const apiResponseData = response.data.data;
             const batchDetails = apiResponseData?.[reference_number];
@@ -71,7 +68,7 @@ export class BatchService {
             if (batchDetails && batchDetails.batch_data) {
                 batchData = this.commonService.addObjectId(batchDetails.batch_data);
             }
-            if (apiResponseData && apiResponseData[reference_number]) {
+            if (apiResponseData && reference_number in apiResponseData) {
                 apiResponseData[reference_number].batch_data = batchData;
             }
             const updatedBatchDetail = {
