@@ -27,37 +27,35 @@ export class CommonService {
 	addObjectId(object: any): any {
 		const handleObject = (obj: any) => {
 			if (obj.id || obj.customer_id) {
-				if (obj.object === "Charge") {
+				if (obj.object === 'Charge') {
 					obj.object_id = `ch_${obj.id}`;
 					obj.createRefund = async (params: Record<string, any>) => await this.chargeService.refundCharge(obj, params);
-				} else if (obj.object === "customer") {
+					obj.tipAdjust = async (params: Record<string, any>) => await this.chargeService.tipAdjustCharge(obj, params);
+				} else if (obj.object === 'customer') {
 					obj.object_id = `cus_${obj.customer_id}`;
 					obj.update = async (customerData: CustomerRequestData) => await this.customerService.updateCustomer(obj, customerData);
 					if (obj.cards === undefined) {
-						obj.cards = {};
+						obj.cards = {}
 					}
 					obj.cards.create = async (cardData: CardData) => await this.customerService.addCardToCustomer(obj, cardData);
 					if (obj.bank_accounts === undefined) {
-						obj.bank_accounts = {};
+						obj.bank_accounts = {}
 					}
 					obj.bank_accounts.create = async (bankData: BankAccount) => await this.customerService.addBankAccToCustomer(obj, bankData);
 					if (obj.charges === undefined) {
 						obj.charges = {};
 					}
 					obj.charges.create = async (chargeData?: ChargeData) => await this.chargeService.createCharge(obj, chargeData);
-				} else if (obj.object === "Token") {
+				} else if (obj.object === 'Token') {
 					obj.object_id = `tok_${obj.id}`;
-				} else if (obj.object === "Card") {
+				} else if (obj.object === 'Card') {
 					obj.object_id = `card_${obj.id}`;
-				} else if (obj.object === "BankAccount") {
+				} else if (obj.object === 'BankAccount') {
 					obj.object_id = `bnk_${obj.id}`;
-				} else if (obj.object === "ACHCharge") {
+				} else if (obj.object === 'ACHCharge') {
 					obj.object_id = `ach_${obj.id}`;
 					obj.createRefund = async (params: Record<string, any>) => await this.chargeService.refundCharge(obj, params);
-				} else if (obj.object === "ApplyApp" && (obj.isv_merchant_type && obj.isv_merchant_type.toLowerCase() === "payee")) {
-					obj.object = "Payee";
-					obj.object_id = `appy_${obj.id}`;
-				} else if (obj.object === "ApplyApp") {
+				} else if (obj.object === 'ApplyApp') {
 					obj.object_id = `appl_${obj.id}`;
 					obj.retrieve = async () => await this.applicationService.retrieveApplicant(obj);
 					obj.addDocument = async (document: MerchantDocument) => await this.applicationService.addApplicantDocument(obj, document);
@@ -65,59 +63,51 @@ export class CommonService {
 					obj.delete = async () => await this.applicationService.deleteApplicant(obj);
 					obj.update = async (appData: Record<string, any>) => await this.applicationService.updateApplicant(obj, appData);
 					obj.listSubAgents = async () => await this.applicationService.SubAgents();
-				} else if (obj.object === "ApplyDocuments") {
+				} else if (obj.object === 'ApplyDocuments') {
 					obj.object_id = `doc_${obj.id}`;
 					obj.delete = async () => await this.applicationService.deleteApplicantDocument(obj);
 					// obj.delete = this.deleteApplicantDocument.bind(this, obj)
-				} else if (obj.object === "Campaign") {
+				} else if (obj.object === 'Campaign') {
 					obj.object_id = `cmp_${obj.id}`;
 					obj.update = async (campaignData: SplitCampaignRequestData) => await this.splitCampaignService.updateCampaign(obj, campaignData);
 					obj.retrieve = async () => await this.splitCampaignService.getDtlCampaign(obj);
-				} else if (obj.object === "User") {
+				} else if (obj.object === 'User') {
 					obj.object_id = `usr_${obj.id}`;
-				} else if (obj.object === "Subscription") {
+				} else if (obj.object === 'Subscription') {
 					obj.object_id = `sub_${obj.id}`;
 					// obj.cancel = this.cancelSubscription.bind(this, obj)
 					// obj.update = this.updateSubscription.bind(this, obj)
 				} else if (obj.object === "Cases") {
 					obj.object = "Dispute";
 					obj.object_id = `dis_${obj.id}`;
-				} else if (obj.object === "Account") {
+				} else if (obj.object === 'Account') {
 					obj.object = "Merchant";
 					obj.object_id = `acc_${obj.id}`;
 				}
 			} else if (obj.MerchantCode) {
-				if (obj.AppData) {
-					obj.object_id = `appy_${obj.MerchantCode}`;
-					obj.object = "Payee";
-					delete obj.MerchantCode;
-				} else {
-					obj.object_id = `appl_${obj.MerchantCode}`;
-					obj.object = "ApplyApp";
-					delete obj.MerchantCode;
-					obj.retrieve = async () => await this.applicationService.retrieveApplicant(obj);
-					obj.addDocument = async (document: MerchantDocument) => await this.applicationService.addApplicantDocument(obj, document);
-					obj.submit = async () => await this.applicationService.submitApplicantForSignature(obj);
-					obj.delete = async () => await this.applicationService.deleteApplicant(obj);
-					obj.update = async (appData: Record<string, any>) => await this.applicationService.updateApplicant(obj, appData);
-					obj.listSubAgents = async () => await this.applicationService.SubAgents();
-				}
-			} else if (obj.plan_id) {
-				//This is plan object
-				obj.object_id = obj.plan_id;
-				obj.object = "Plan";
-				delete obj.plan_id;
+				obj.object_id = `appl_${obj.MerchantCode}`;
+				obj.object = 'ApplyApp';
+				delete obj.MerchantCode;
+				obj.retrieve = async () => await this.applicationService.retrieveApplicant(obj);
+				obj.addDocument = async (document: MerchantDocument) => await this.applicationService.addApplicantDocument(obj, document);
+				obj.submit = async () => await this.applicationService.submitApplicantForSignature(obj);
+				obj.delete = async () => await this.applicationService.deleteApplicant(obj);
+				obj.update = async (appData: Record<string, any>) => await this.applicationService.updateApplicant(obj, appData);
+				obj.listSubAgents = async () => await this.applicationService.SubAgents();
+			} else if (obj.plan_id) { //This is plan object
+				obj.object_id = obj.plan_id
+				obj.object = 'Plan'
+				delete obj.plan_id
 				//add functions
 				obj.retrieve = async () => await this.planService.getPlan(obj);
 				obj.update = async (planData: Record<string, any>) => await this.planService.updatePlan(obj, planData);
 				obj.delete = async () => await this.planService.deletePlan(obj);
 				obj.createSubscription = async (subscriptionData: Record<string, any>) => await this.planService.createSubscription(obj, subscriptionData);
-			} else if (obj.Batch_Reference_Number || obj.batch_ref_num) {
-				//This is batch object
-				obj.object_id = `brn_${obj.Batch_Reference_Number || obj.batch_ref_num}`;
-				obj.object = "Batch";
-				delete obj.Batch_Reference_Number;
-				delete obj.batch_ref_num;
+			} else if (obj.Batch_Reference_Number || obj.batch_ref_num) { //This is batch object
+				obj.object_id = `brn_${obj.Batch_Reference_Number || obj.batch_ref_num}`
+				obj.object = 'Batch'
+				delete obj.Batch_Reference_Number
+				delete obj.batch_ref_num
 			}
 
 			for (const key in obj) {
