@@ -203,6 +203,29 @@ export class ChargeService {
         }
     }
 
+    async tipAdjustCharge(charge: ChargeResponseData | string | AchChargeResponseData, params: Record<string, any>): Promise<any> {
+        let chargeId = typeof charge === "string" ? charge : charge.object_id ?? charge.id ?? "";
+        if (typeof charge !== "object" || charge === null || Array.isArray(charge)) {
+            if (typeof charge === "string") {
+                charge = await this.getCharge(charge);
+            }
+        }
+        if (chargeId.startsWith("ch_")) {
+            chargeId = chargeId.slice(3);
+        }
+        if (chargeId.startsWith("ach_")) {
+            return CommonService.manageError({ source: "API Tip Adjust a charge" }, 'Tip adjustment is not applicable for ACH charges');
+        }
+        try {
+            const response = await axios.post(`${this.baseURL}charges/${chargeId}/tip_adjustment`, params, {
+                headers: this.commonService.requestHeaders(this.bearerToken),
+            });
+            return this.commonService.addObjectId(response.data.data);
+        } catch (error: any) {
+            return CommonService.manageError({ source: "API Tip Adjust a charge" }, error.response || {});
+        }
+    }
+
     async refundACHCharge(charge: AchChargeResponseData | string, params: Record<string, any> = {}): Promise<any> {
         if (typeof charge === "object") {
             params.type = "credit";

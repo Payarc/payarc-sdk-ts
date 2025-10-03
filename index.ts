@@ -21,6 +21,7 @@ import { PayarcConnectService } from './src/services/PayarcConnectService';
 import { CommonService } from './src/services/CommonService';
 import { BatchService } from './src/services/BatchService';
 import { BatchDetailRequestData } from './src/models/batch/BatchDetailRequestData';
+import { InstructionalFundingService } from './src/services/InstructionalFundingService';
 import { PayeeService } from './src/services/PayeeService';
 import { PayeeResponseData } from './src/models/payee/PayeeResponseData.model';
 import { PayeeRequestData } from './src/models/payee/PayeeRequestData.model';
@@ -36,6 +37,7 @@ class Payarc {
     private planService: PlanService;
     private batchService: BatchService;
     private payeeService: PayeeService;
+    private instructionalFundingService: InstructionalFundingService;
     private payarcConnectService: PayarcConnectService;
     private commonService: CommonService;
     private baseURL: string;
@@ -51,6 +53,7 @@ class Payarc {
         listByAgentPayfac: () => Promise<any>,
         listByAgentTraditional: (from_date?: string, to_date?: string) => Promise<any>,
         createRefund: (chargeId: string | any, refundData?: any) => Promise<any>,
+        tipAdjust: (chargeId: string | any, tipData: any) => Promise<any>,
     };
 
     public customers: {
@@ -118,6 +121,11 @@ class Payarc {
         delete: (payee: string | PayeeResponseData) => Promise<any>,
     };
 
+    public instructionalFunding: {
+        create: (obj: any, instructionalFundingData?: any) => Promise<any>,
+        list: (searchData?: BaseListOptions) => Promise<any>
+    };
+
     public payarcConnect: {
         login: () => Promise<any>,
         sale: (tenderType: string, ecrRefNum: string, amount: string, deviceSerialNo: string) => Promise<any>,
@@ -167,6 +175,7 @@ class Payarc {
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
         this.batchService = new BatchService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
         this.payeeService = new PayeeService(bearerTokenAgent, this.baseURL, this.commonService);
+        this.instructionalFundingService = new InstructionalFundingService(bearerToken, this.baseURL, this.commonService);
         this.payarcConnectService = new PayarcConnectService(bearerToken, this.payarcConnectAccessToken, this.payarcConnectBaseUrl, this.commonService);
         this.charges = {
             create: this.chargeService.createCharge.bind(this.chargeService),
@@ -175,6 +184,7 @@ class Payarc {
             listByAgentPayfac: this.chargeService.listChargesByAgentPayfac.bind(this.chargeService),
             listByAgentTraditional: this.chargeService.listChargesByAgentTraditional.bind(this.chargeService),
             createRefund: this.chargeService.refundCharge.bind(this.chargeService),
+            tipAdjust: this.chargeService.tipAdjustCharge.bind(this.chargeService),
         };
         this.customers = {
             create: this.customerService.createCustomer.bind(this.customerService),
@@ -232,6 +242,10 @@ class Payarc {
             create: this.payeeService.addPayee.bind(this.payeeService),
             list: this.payeeService.listPayee.bind(this.payeeService),
             delete: this.payeeService.deletePayee.bind(this.payeeService),
+        };
+        this.instructionalFunding = {
+            create: this.instructionalFundingService.createInstructionalFunding.bind(this.instructionalFundingService),
+            list: this.instructionalFundingService.listInstructionalFunding.bind(this.instructionalFundingService)
         };
         this.payarcConnect = {
             login: this.payarcConnectService.pcLogin.bind(this.payarcConnectService),
