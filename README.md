@@ -1261,5 +1261,94 @@ Returns a list of registered terminal for merchant
     .catch((error) => console.error("Error:", error));
 ```
 
+## Managing User Settings
+
+User Settings allow you to configure webhook URLs for various events in your Payarc integration. Each user can configure their own webhook endpoints to receive real-time notifications.
+
+### Available Webhook Settings
+
+The SDK provides constants for webhook configuration:
+
+```ts
+import { UserSettingConstants } from '@payarc/payarc-sdk-ts';
+
+// Webhook Settings
+UserSettingConstants.ONBOARDING_WEBHOOK              // 'merchant.onboarded.webhook'
+UserSettingConstants.LEAD_UPDATE_WEBHOOK             // 'lead.updated.webhook'
+UserSettingConstants.LEAD_UPDATE_CATEGORY_WEBHOOK   // 'lead.category.updated.webhook'
+UserSettingConstants.LEAD_UNDERWRITING_UPDATED      // 'lead.underwriting.updated.webhook'
+```
+
+### Configure Webhook URL
+
+Set up a webhook URL to receive notifications. If a webhook for the specified key already exists, it will be updated:
+
+```ts
+payarc.userSettings.createOrUpdate({
+    key: UserSettingConstants.ONBOARDING_WEBHOOK,
+    value: 'https://your-domain.com/webhooks/onboarding'
+})
+.then((setting) => {
+    console.log("Webhook configured:", setting);
+})
+.catch(error => console.error('Error detected:', error));
+```
+
+### List All Webhook Settings
+
+Retrieve all configured webhook settings for the authenticated user:
+
+```ts
+payarc.userSettings.list()
+.then((response) => {
+    const { userSettings, pagination } = response;
+    console.log("Webhook settings:", userSettings);
+})
+.catch(error => console.error('Error detected:', error));
+```
+
+### List Webhook Settings with Pagination
+
+```ts
+payarc.userSettings.list({
+    limit: 10,
+    page: 1
+})
+.then((response) => {
+    const { userSettings, pagination } = response;
+    userSettings.forEach(setting => {
+        console.log(`${setting.key}: ${setting.value}`);
+    });
+})
+.catch(error => console.error('Error detected:', error));
+```
+
+### Delete Webhook Setting
+
+Remove a webhook configuration by its key:
+
+```ts
+payarc.userSettings.delete(UserSettingConstants.ONBOARDING_WEBHOOK)
+.then((result) => {
+    console.log("Webhook setting removed");
+})
+.catch(error => console.error('Error detected:', error));
+```
+
+### Update Existing Webhook
+
+To update an existing webhook URL, simply use the same key with a new value:
+
+```ts
+payarc.userSettings.createOrUpdate({
+    key: UserSettingConstants.LEAD_UPDATE_WEBHOOK,
+    value: 'https://your-domain.com/webhooks/updated-lead-endpoint'
+})
+.then((setting) => {
+    console.log("Webhook updated:", setting);
+})
+.catch(error => console.error('Error detected:', error));
+```
+
 
 This documentation should help you understand how to use the Payarc SDK to manage charges and customers. If you have any questions, please refer to the Payarc API documentation or contact support.

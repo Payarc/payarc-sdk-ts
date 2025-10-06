@@ -26,6 +26,8 @@ import { PayeeService } from './src/services/PayeeService';
 import { PayeeResponseData } from './src/models/payee/PayeeResponseData.model';
 import { PayeeRequestData } from './src/models/payee/PayeeRequestData.model';
 import { BaseResponse } from './src/models/BaseResponse.model';
+import { UserSettingService } from './src/services/UserSettingService';
+import { UserSettingRequestData } from './src/models/userSetting/UserSettingRequestData.model';
 
 class Payarc {
     private chargeService: ChargeService;
@@ -40,6 +42,7 @@ class Payarc {
     private instructionalFundingService: InstructionalFundingService;
     private payarcConnectService: PayarcConnectService;
     private commonService: CommonService;
+    private userSettingService: UserSettingService;
     private baseURL: string;
     private payarcConnectBaseUrl: string;
     private payarcConnectAccessToken?: string;
@@ -121,6 +124,12 @@ class Payarc {
         delete: (payee: string | PayeeResponseData) => Promise<any>,
     };
 
+    public userSettings: {
+        createOrUpdate: (settingData: UserSettingRequestData) => Promise<any>,
+        list: (searchData?: BaseListOptions) => Promise<any>,
+        delete: (settingKey: string) => Promise<boolean>,
+    };
+
     public instructionalFunding: {
         create: (obj: any, instructionalFundingData?: any) => Promise<any>,
         list: (searchData?: BaseListOptions) => Promise<any>
@@ -175,6 +184,7 @@ class Payarc {
         this.planService = new PlanService(bearerToken, this.baseURL, this.commonService);
         this.batchService = new BatchService(bearerToken, bearerTokenAgent, this.baseURL, this.commonService);
         this.payeeService = new PayeeService(bearerTokenAgent, this.baseURL, this.commonService);
+        this.userSettingService = new UserSettingService(bearerToken, this.baseURL, this.commonService);
         this.instructionalFundingService = new InstructionalFundingService(bearerToken, this.baseURL, this.commonService);
         this.payarcConnectService = new PayarcConnectService(bearerToken, this.payarcConnectAccessToken, this.payarcConnectBaseUrl, this.commonService);
         this.charges = {
@@ -242,6 +252,11 @@ class Payarc {
             create: this.payeeService.addPayee.bind(this.payeeService),
             list: this.payeeService.listPayee.bind(this.payeeService),
             delete: this.payeeService.deletePayee.bind(this.payeeService),
+        };
+        this.userSettings = {
+            createOrUpdate: this.userSettingService.createOrUpdateUserSetting.bind(this.userSettingService),
+            list: this.userSettingService.getAllUserSettings.bind(this.userSettingService),
+            delete: this.userSettingService.deleteUserSetting.bind(this.userSettingService),
         };
         this.instructionalFunding = {
             create: this.instructionalFundingService.createInstructionalFunding.bind(this.instructionalFundingService),
